@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SeedDataSO
   seedName: BSeed
   growthTime: 30
-  seedPrefab: {fileID: 6208110011841838250, guid: 5bf0bd447da2c044297d2da62f585c7d, type: 3}
-  germinatingPrefab: {fileID: 6208110011841838250, guid: 369d0142c9673a140ae99f5f6de58f2b, type: 3}
-  growingPrefab: {fileID: 6208110011841838250, guid: 55bd5a78f1d30b543b5e47e065ebeb65, type: 3}
-  readyPrefab: {fileID: 6208110011841838250, guid: a40cc747550a37643aa3fa7d8f3bd880, type: 3}
+  seedPrefab: {fileID: 6208110011841838250, guid: 6c6121db4ce9a00408448c439ed6d83a, type: 3}
+  germinatingPrefab: {fileID: 6208110011841838250, guid: b9911f06873124144a7897ad8aa7abcc, type: 3}
+  growingPrefab: {fileID: 6208110011841838250, guid: 5d5b0e89e7dc5f349ba1a4c9c582d19b, type: 3}
+  readyPrefab: {fileID: 6208110011841838250, guid: 58a5da4d0db52264d88b05831c923f95, type: 3}
