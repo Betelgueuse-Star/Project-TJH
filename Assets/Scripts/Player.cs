@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerPickUpDrop : MonoBehaviour
+public class Player : MonoBehaviour
 {
     [SerializeField] private GameObject playerCameraGameObject;
     [SerializeField] private GameObject objectGrabPointGameObject;
@@ -19,9 +19,14 @@ public class PlayerPickUpDrop : MonoBehaviour
         {
             if (Physics.Raycast(playerCameraGameObject.transform.position, playerCameraGameObject.transform.forward, out RaycastHit raycastHitInfo, pickUpRange, pickUpLayerMask))
             {
+                Debug.Log("Hit object: " + raycastHitInfo.transform.name);
                 if (raycastHitInfo.transform.TryGetComponent(out objectGrabbable)) //atribui o objeto que foi pego para a variavel objectGrabbable
                 {
                     objectGrabbable.Grab(objectGrabPointGameObject.transform);
+                }
+                if (raycastHitInfo.transform.TryGetComponent(out  IInteractable interactable))//busca se o scriptpossui a interface IInteractable
+                {
+                    interactable.Interact();
                 }
             }
         }

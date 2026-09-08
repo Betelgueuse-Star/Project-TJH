@@ -1,9 +1,15 @@
 using UnityEngine;
+using System;
 
 public class ObjectGrabbable : MonoBehaviour
 {
     private Rigidbody rb;
     private Transform ObjectGrabPointTransform;
+
+    public bool IsBeingHeld => ObjectGrabPointTransform != null;
+
+    public event Action OnGrabbed;
+    public event Action OnDropped;
 
     private void Awake()
     {
@@ -27,11 +33,15 @@ public class ObjectGrabbable : MonoBehaviour
     {
         this.ObjectGrabPointTransform = grabPoint;
         rb.useGravity = false; //desativa a gravidade do objeto, pois caso ativa ele vai cair enquanto estiver segurando
+
+        OnGrabbed?.Invoke();
     }
 
     public void Drop()
     {
         this.ObjectGrabPointTransform = null;
         rb.useGravity = true;
+
+        OnDropped?.Invoke();
     }
 }

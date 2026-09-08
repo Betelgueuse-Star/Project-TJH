@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34ec5352df57d2246a18bc812fc6594f, type: 3}
+  m_Name: BSeed
+  m_EditorClassIdentifier: Assembly-CSharp::SeedDataSO
+  seedName: BSeed
+  growthTime: 30
+  seedPrefab: {fileID: 6208110011841838250, guid: 5bf0bd447da2c044297d2da62f585c7d, type: 3}
+  germinatingPrefab: {fileID: 6208110011841838250, guid: 369d0142c9673a140ae99f5f6de58f2b, type: 3}
+  growingPrefab: {fileID: 6208110011841838250, guid: 55bd5a78f1d30b543b5e47e065ebeb65, type: 3}
+  readyPrefab: {fileID: 6208110011841838250, guid: a40cc747550a37643aa3fa7d8f3bd880, type: 3}
