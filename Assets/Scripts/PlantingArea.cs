@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+
 
 public class PlantingArea : MonoBehaviour
 {
@@ -11,21 +13,6 @@ public class PlantingArea : MonoBehaviour
     private GameObject currentPlantVisual;
 
     private float growthTimer;
-
-
-    private void Update()
-    {
-        if (currentState == PlantGrowthState.Empty)
-            return;
-
-        if (currentState == PlantGrowthState.Ready)
-            return;
-
-        growthTimer += Time.deltaTime;
-        
-        UpdateGrowth();
-    }
-
 
     private void OnTriggerEnter(Collider other)
     {
@@ -51,27 +38,25 @@ public class PlantingArea : MonoBehaviour
         Destroy(seed.gameObject);
 
         UpdatePlantVisual();
+
+        StartCoroutine(GrowPlant());
     }
-
-
-    private void UpdateGrowth()
+    private IEnumerator GrowPlant()
     {
-        float progress = growthTimer / plantedSeedData.growthTime;
+        float stageTime = plantedSeedData.growthTime / 3f;
 
-        if (progress >= 1f)
-        {
-            ChangeState(PlantGrowthState.Ready);
-        }
-        else if (progress >= 0.66f)
-        {
-            ChangeState(PlantGrowthState.Growing);
-        }
-        else if (progress >= 0.33f)
-        {
-            ChangeState(PlantGrowthState.Germinating);
-        }
+        yield return new WaitForSeconds(stageTime);
+
+        ChangeState(PlantGrowthState.Germinating);
+
+        yield return new WaitForSeconds(stageTime);
+
+        ChangeState(PlantGrowthState.Growing);
+
+        yield return new WaitForSeconds(stageTime);
+
+        ChangeState(PlantGrowthState.Ready);
     }
-
 
     private void ChangeState(PlantGrowthState newState)
     {
@@ -123,7 +108,7 @@ public class PlantingArea : MonoBehaviour
             {
                 if (currentPlantVisual.TryGetComponent(out Sapling sapling))
                 {
-                    sapling.SetPlantingArea(this);
+                    sapling.Setup(plantedSeedData, this);
                 }
             }
         }

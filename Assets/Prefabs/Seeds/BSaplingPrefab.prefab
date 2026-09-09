@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 5256354774488875724}
   - component: {fileID: 9105949862954822441}
   - component: {fileID: 8776224963831918746}
-  - component: {fileID: 6025935435366749837}
+  - component: {fileID: 64543601276142209}
   m_Layer: 0
-  m_Name: ReadyPrefab_Oak
+  m_Name: BSaplingPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,7 +70,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 109cfab647f8b5d4587e38aece51851e, type: 2}
+  - {fileID: 2100000, guid: 3562e43168147394090a35db77f7ac20, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aac842d1d9db06045939631f9bb32971, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectGrabbable
---- !u!114 &6025935435366749837
+--- !u!114 &64543601276142209
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

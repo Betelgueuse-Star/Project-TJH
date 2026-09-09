@@ -6,6 +6,11 @@ public class Sapling : MonoBehaviour
     private ObjectGrabbable objectGrabbable;
     private PlantingArea plantingArea;
 
+    public SeedDataSO SeedData { get; private set; }
+
+    public bool IsBeingHeld => objectGrabbable != null && objectGrabbable.IsBeingHeld;
+
+
     private void Awake()
     {
         objectGrabbable = GetComponent<ObjectGrabbable>();
@@ -21,8 +26,9 @@ public class Sapling : MonoBehaviour
         }
     }
 
-    public void SetPlantingArea(PlantingArea area)
+    public void Setup(SeedDataSO seedData, PlantingArea area)
     {
+        SeedData = seedData;
         plantingArea = area;
     }
 
