@@ -12,7 +12,7 @@ public class PlantingArea : MonoBehaviour
 
     private GameObject currentPlantVisual;
 
-    private float growthTimer;
+    //private float growthTimer;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -64,7 +64,7 @@ public class PlantingArea : MonoBehaviour
 
         UpdatePlantVisual();
 
-        Debug.Log("Planta mudou para: " + currentState);
+        //Debug.Log("Planta mudou para: " + currentState);
     }
 
 
@@ -121,8 +121,6 @@ public class PlantingArea : MonoBehaviour
         plantedSeedData = null;
 
         currentState = PlantGrowthState.Empty;
-
-        growthTimer = 0f;
 
         Debug.Log("Planta removida. Área disponível novamente.");
     }

@@ -11,30 +11,47 @@ public class Player : MonoBehaviour
 
     private ObjectGrabbable objectGrabbable;
 
+    public bool IsHoldingObject => objectGrabbable != null;
+
     public void OnInteract(InputValue value)
     {
         if (!value.isPressed)
             return;
-        if (objectGrabbable == null)//nao esta carregando um objeto
+
+        if (IsHoldingObject)
         {
-            if (Physics.Raycast(playerCameraGameObject.transform.position, playerCameraGameObject.transform.forward, out RaycastHit raycastHitInfo, pickUpRange, pickUpLayerMask))
-            {
-                Debug.Log("Hit object: " + raycastHitInfo.transform.name);
-                if (raycastHitInfo.transform.TryGetComponent(out objectGrabbable)) //atribui o objeto que foi pego para a variavel objectGrabbable
-                {
-                    objectGrabbable.Grab(objectGrabPointGameObject.transform);
-                }
-                if (raycastHitInfo.transform.TryGetComponent(out  IInteractable interactable))//busca se o scriptpossui a interface IInteractable
-                {
-                    interactable.Interact();
-                }
-            }
-        }
-        else
-        {
-            //atualmente segurando algo
             objectGrabbable.Drop();
-            objectGrabbable = null; //limpa o campo
+            objectGrabbable = null;
+
+            return;
         }
+
+        //se nao acertar nada, return
+        if (!Physics.Raycast(playerCameraGameObject.transform.position, playerCameraGameObject.transform.forward, out RaycastHit raycastHitInfo, pickUpRange, pickUpLayerMask))
+        {
+            return; 
+        }
+
+        //Debug.Log("Hit object: " + raycastHitInfo.transform.name);
+        if (raycastHitInfo.transform.TryGetComponent(out ObjectGrabbable grabbable)) //atribui o objeto que foi pego para a variavel objectGrabbable
+        {
+            GrabObject(grabbable);
+
+            return;
+        }
+        if (raycastHitInfo.transform.TryGetComponent(out IInteractable interactable))//busca se o scriptpossui a interface IInteractable
+        {
+            interactable.Interact(this);
+        }
+    }
+
+    public void GrabObject(ObjectGrabbable newObjectGrabbable)
+    {
+        if (IsHoldingObject)
+            return;
+
+        objectGrabbable = newObjectGrabbable;
+
+        objectGrabbable.Grab(objectGrabPointGameObject.transform);
     }
 }
