@@ -4,7 +4,7 @@ using UnityEngine;
 public class ItemStorage : MonoBehaviour, IInteractable
 {
     [Header("Item")]
-    [SerializeField] private GameObject itemPrefab;
+    [SerializeField] private ItemTypeSO startingItemType;
 
     [Header("Storage")]
     [SerializeField] private TextMeshProUGUI amountText;
@@ -14,7 +14,47 @@ public class ItemStorage : MonoBehaviour, IInteractable
     [Header("Spawn")]
     [SerializeField] private Transform spawnPoint;
 
+    private ItemTypeSO storedItemType;
+
+    public bool IsEmpty => currentAmount <= 0;
+
     private void Awake()
+    {
+        //se o estoque ja comecar com zero, e tiver um item inicial, ele vai armazenar o tipo do item inicial direto
+        //entao temos uma condicao para verificar se o currentAmount é maior que zero, se for, ele vai armazenar o tipo do item inicial
+        //caso for zero, ele nao vai armazenar o tipo do item inicial, e vai ficar null, podendo armazenar outro item
+        if (currentAmount > 0) 
+        {
+            storedItemType = startingItemType;
+        }
+        UpdateAmountText();
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!other.TryGetComponent(out IStorableItem storableItem))
+            return;
+
+        if (!other.TryGetComponent(out ObjectGrabbable grabbable))
+            return;
+
+        if (grabbable.IsBeingHeld)
+            return;
+
+        if (IsEmpty)
+        {
+            storedItemType = storableItem.ItemType;
+        }
+        if (storedItemType != storableItem.ItemType)
+            return;
+
+        currentAmount++;
+
+        UpdateAmountText();
+
+        Destroy(other.gameObject);
+    }
+
+    private void UpdateAmountText()
     {
         amountText.text = currentAmount.ToString();
     }
@@ -23,16 +63,15 @@ public class ItemStorage : MonoBehaviour, IInteractable
         if (player.IsHoldingObject)
             return;
 
-        if (currentAmount <= 0)
+        if (IsEmpty)
         {
             Debug.Log("Estoque vazio!");
-
             return;
         }
 
 
         GameObject itemObject = Instantiate(
-            itemPrefab,
+            storedItemType.ItemPrefab,
             spawnPoint.position,
             spawnPoint.rotation
         );
@@ -51,6 +90,10 @@ public class ItemStorage : MonoBehaviour, IInteractable
 
 
         currentAmount--;
+        if (currentAmount == 0)
+        {
+            storedItemType = null;
+        }
         amountText.text = currentAmount.ToString();
 
         player.GrabObject(grabbable);
