@@ -7,7 +7,11 @@ public class DeliveryArea : MonoBehaviour
         
         if (!other.TryGetComponent(out Sapling sapling))
             return;
-        if (sapling.IsBeingHeld)
+
+        if (!other.TryGetComponent(out ObjectGrabbable grabbable))
+            return;
+
+        if (grabbable.IsBeingHeld)
             return;
 
         OrderManager.Instance.TryDeliver(sapling);

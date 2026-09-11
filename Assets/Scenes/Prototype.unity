@@ -1615,6 +1615,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 561280164}
     m_Modifications:
+    - target: {fileID: 443817771699559514, guid: 563ae32f11cb37e49809f81d24c53000, type: 3}
+      propertyPath: m_LinearDamping
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6258475607760448477, guid: 563ae32f11cb37e49809f81d24c53000, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -2074,6 +2078,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 561280164}
     m_Modifications:
+    - target: {fileID: 443817771699559514, guid: 563ae32f11cb37e49809f81d24c53000, type: 3}
+      propertyPath: m_LinearDamping
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6258475607760448477, guid: 563ae32f11cb37e49809f81d24c53000, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -3197,6 +3205,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 561280164}
     m_Modifications:
+    - target: {fileID: 443817771699559514, guid: 563ae32f11cb37e49809f81d24c53000, type: 3}
+      propertyPath: m_LinearDamping
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6258475607760448477, guid: 563ae32f11cb37e49809f81d24c53000, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -7190,6 +7202,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 561280164}
     m_Modifications:
+    - target: {fileID: 443817771699559514, guid: 563ae32f11cb37e49809f81d24c53000, type: 3}
+      propertyPath: m_LinearDamping
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6258475607760448477, guid: 563ae32f11cb37e49809f81d24c53000, type: 3}
       propertyPath: m_Mesh
       value: 

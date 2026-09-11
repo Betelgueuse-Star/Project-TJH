@@ -22,7 +22,10 @@ public class PlantingArea : MonoBehaviour
         if (!other.TryGetComponent(out Seed seed))
             return;
 
-        if (seed.IsBeingHeld)
+        if (!other.TryGetComponent(out ObjectGrabbable grabbable))
+        return;
+
+        if (grabbable.IsBeingHeld)
             return;
 
         PlantSeed(seed);

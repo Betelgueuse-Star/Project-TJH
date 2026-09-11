@@ -5,11 +5,7 @@ public class Sapling : MonoBehaviour
 {
     private ObjectGrabbable objectGrabbable;
     private PlantingArea plantingArea;
-
     public SeedDataSO SeedData { get; private set; }
-
-    public bool IsBeingHeld => objectGrabbable != null && objectGrabbable.IsBeingHeld;
-
 
     private void Awake()
     {
