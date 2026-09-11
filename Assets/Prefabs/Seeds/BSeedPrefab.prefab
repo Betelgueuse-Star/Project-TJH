@@ -167,3 +167,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Seed
   seedData: {fileID: 11400000, guid: a3fdf7f26b7107d4e807c206e878146e, type: 2}
+  itemType: {fileID: 11400000, guid: 4335e068ec54e104dbe4e83cf95e7e24, type: 2}

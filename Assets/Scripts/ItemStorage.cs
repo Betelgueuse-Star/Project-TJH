@@ -27,6 +27,10 @@ public class ItemStorage : MonoBehaviour, IInteractable
         {
             storedItemType = startingItemType;
         }
+        if (startingItemType == null)
+        {
+            currentAmount = 0;
+        }
         UpdateAmountText();
     }
     private void OnTriggerEnter(Collider other)

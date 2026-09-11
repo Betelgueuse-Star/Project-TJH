@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 541267398611649006}
   - component: {fileID: 8949379910925419978}
+  - component: {fileID: 963454138817552987}
   - component: {fileID: 7356190866648792451}
   m_Layer: 0
   m_Name: ItemStorage
@@ -55,6 +56,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &963454138817552987
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9000948356883473885}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.05, y: 1.05, z: 1.05}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7356190866648792451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,7 +89,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00784aa63116ac743908dec751ec5146, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemStorage
-  itemPrefab: {fileID: 6208110011841838250, guid: 500cfd39e86923b4bac29c10595af49c, type: 3}
+  startingItemType: {fileID: 11400000, guid: 26c0c4642bb696b4280917749ac717df, type: 2}
+  amountText: {fileID: 0}
   currentAmount: 10
   spawnPoint: {fileID: 0}
 --- !u!1001 &1959058469151497076
@@ -80,7 +103,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6572587819263856003, guid: 563ae32f11cb37e49809f81d24c53000, type: 3}
       propertyPath: m_VersionIndex
-      value: 2067
+      value: 2076
       objectReference: {fileID: 0}
     - target: {fileID: 6572587819263856003, guid: 563ae32f11cb37e49809f81d24c53000, type: 3}
       propertyPath: m_Colors.Array.size
