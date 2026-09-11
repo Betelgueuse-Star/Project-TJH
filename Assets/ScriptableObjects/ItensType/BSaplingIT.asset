@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5685d3592fb34e42adaecd853a27bff, type: 3}
-  m_Name: BSeedItem
+  m_Name: BSaplingIT
   m_EditorClassIdentifier: Assembly-CSharp::ItemTypeSO
-  itemPrefab: {fileID: 6208110011841838250, guid: 447b00eff65393146bedea484684485a, type: 3}
+  itemPrefab: {fileID: 6208110011841838250, guid: 58a5da4d0db52264d88b05831c923f95, type: 3}

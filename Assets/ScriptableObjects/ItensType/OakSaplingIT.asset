@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5685d3592fb34e42adaecd853a27bff, type: 3}
-  m_Name: OakSaplingType
+  m_Name: OakSaplingIT
   m_EditorClassIdentifier: Assembly-CSharp::ItemTypeSO
   itemPrefab: {fileID: 6208110011841838250, guid: a40cc747550a37643aa3fa7d8f3bd880, type: 3}
