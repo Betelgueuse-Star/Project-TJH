@@ -42,19 +42,19 @@ public class OrderManager : MonoBehaviour
             "Novo pedido: " +
             currentOrder.RequestedAmount +
             "x " +
-            currentOrder.RequestedSeed.seedName
+            currentOrder.RequestedItem.name
         );
     }
 
 
-    public bool TryDeliver(Sapling sapling)
+    public bool TryDeliver(IDeliverable deliverable, GameObject deliveredObject)
     {
         if (currentOrder == null)
             return false;
 
-        if (sapling.SeedData != currentOrder.RequestedSeed)
+        if (deliverable.ItemType != currentOrder.RequestedItem)
         {
-            Debug.Log("Esta planta não pertence ao pedido atual.");
+            Debug.Log("Este item não pertence ao pedido atual.");
 
             return false;
         }
@@ -68,7 +68,7 @@ public class OrderManager : MonoBehaviour
             currentOrder.RequestedAmount
         );
 
-        Destroy(sapling.gameObject);
+        Destroy(deliveredObject);
 
         if (deliveredAmount >= currentOrder.RequestedAmount)
         {

@@ -4,8 +4,7 @@ public class DeliveryArea : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        
-        if (!other.TryGetComponent(out Sapling sapling))
+        if (!other.TryGetComponent(out IDeliverable deliverable))
             return;
 
         if (!other.TryGetComponent(out ObjectGrabbable grabbable))
@@ -14,6 +13,6 @@ public class DeliveryArea : MonoBehaviour
         if (grabbable.IsBeingHeld)
             return;
 
-        OrderManager.Instance.TryDeliver(sapling);
+        OrderManager.Instance.TryDeliver(deliverable, other.gameObject);
     }
 }

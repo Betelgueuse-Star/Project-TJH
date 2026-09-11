@@ -9,8 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40bbda19cbb135641ada77b34e67df1f, type: 3}
-  m_Name: Order
-  m_EditorClassIdentifier: Assembly-CSharp::OrderDataSO
-  requestedItem: {fileID: 11400000, guid: 9a2df0e5035501345a9f526ffae7748a, type: 2}
-  requestedAmount: 3
+  m_Script: {fileID: 11500000, guid: e5685d3592fb34e42adaecd853a27bff, type: 3}
+  m_Name: BSaplingType
+  m_EditorClassIdentifier: Assembly-CSharp::ItemTypeSO
+  itemPrefab: {fileID: 6208110011841838250, guid: a40cc747550a37643aa3fa7d8f3bd880, type: 3}

@@ -166,3 +166,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b9918f70947a13428a5e61e1bad1e26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Sapling
+  itemType: {fileID: 11400000, guid: f111c341dab6058478a3cc7913f5a2b2, type: 2}

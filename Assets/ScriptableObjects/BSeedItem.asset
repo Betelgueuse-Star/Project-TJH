@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5685d3592fb34e42adaecd853a27bff, type: 3}
   m_Name: BSeedItem
   m_EditorClassIdentifier: Assembly-CSharp::ItemTypeSO
-  itemPrefab: {fileID: 0}
+  itemPrefab: {fileID: 6208110011841838250, guid: 447b00eff65393146bedea484684485a, type: 3}

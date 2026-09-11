@@ -18,3 +18,4 @@ MonoBehaviour:
   germinatingPrefab: {fileID: 6208110011841838250, guid: 369d0142c9673a140ae99f5f6de58f2b, type: 3}
   growingPrefab: {fileID: 6208110011841838250, guid: 55bd5a78f1d30b543b5e47e065ebeb65, type: 3}
   readyPrefab: {fileID: 6208110011841838250, guid: a40cc747550a37643aa3fa7d8f3bd880, type: 3}
+  saplingItemType: {fileID: 11400000, guid: 9a2df0e5035501345a9f526ffae7748a, type: 2}

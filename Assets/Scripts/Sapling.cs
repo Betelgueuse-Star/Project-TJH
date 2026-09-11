@@ -1,11 +1,18 @@
 using UnityEngine;
 
 [RequireComponent(typeof(ObjectGrabbable))]
-public class Sapling : MonoBehaviour
+public class Sapling : MonoBehaviour, IDeliverable
 {
+    [Header("Delivery")]
+    [SerializeField] private ItemTypeSO itemType;
+
     private ObjectGrabbable objectGrabbable;
     private PlantingArea plantingArea;
+
     public SeedDataSO SeedData { get; private set; }
+
+    public ItemTypeSO ItemType => itemType;
+
 
     private void Awake()
     {
@@ -14,6 +21,7 @@ public class Sapling : MonoBehaviour
         objectGrabbable.OnGrabbed += RemoveFromPlantingArea;
     }
 
+
     private void OnDestroy()
     {
         if (objectGrabbable != null)
@@ -21,6 +29,7 @@ public class Sapling : MonoBehaviour
             objectGrabbable.OnGrabbed -= RemoveFromPlantingArea;
         }
     }
+
 
     public void Setup(SeedDataSO seedData, PlantingArea area)
     {

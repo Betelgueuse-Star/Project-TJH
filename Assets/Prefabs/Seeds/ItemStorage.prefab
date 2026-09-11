@@ -103,7 +103,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6572587819263856003, guid: 563ae32f11cb37e49809f81d24c53000, type: 3}
       propertyPath: m_VersionIndex
-      value: 2076
+      value: 2079
       objectReference: {fileID: 0}
     - target: {fileID: 6572587819263856003, guid: 563ae32f11cb37e49809f81d24c53000, type: 3}
       propertyPath: m_Colors.Array.size

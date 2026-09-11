@@ -4,11 +4,11 @@ using UnityEngine;
 public class OrderDataSO : ScriptableObject
 {
     [Header("Pedido")]
-    [SerializeField] private SeedDataSO requestedSeed;
+    [SerializeField] private ItemTypeSO requestedItem;
 
     [Min(1)]
     [SerializeField] private int requestedAmount = 1;
 
-    public SeedDataSO RequestedSeed => requestedSeed;
+    public ItemTypeSO RequestedItem => requestedItem;
     public int RequestedAmount => requestedAmount;
 }
