@@ -5,7 +5,10 @@ public class Seed : MonoBehaviour, IStorableItem
     [Header("Seed")]
     [SerializeField] private SeedDataSO seedData;
 
-    [Header("Storage")]
+    [Header("Soil")]
+    [SerializeField] private SoilDataSO soilData;
+
+    [Header("ItemTypeSO")]
     [SerializeField] private ItemTypeSO itemType;
 
 

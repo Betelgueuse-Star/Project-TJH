@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Seed", menuName = "Game/Seeds/Seed Data")]
+[CreateAssetMenu(fileName = "New Seed", menuName = "Game/Data/Seed Data")]
 public class SeedDataSO : ScriptableObject
 {
     [Header("Informações")]

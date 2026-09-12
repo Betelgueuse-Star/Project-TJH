@@ -8,21 +8,45 @@ public class PlantingArea : MonoBehaviour
     [SerializeField] private Transform plantingPoint;
 
     private SeedDataSO plantedSeedData;
-    private PlantGrowthState currentState = PlantGrowthState.Empty;
+    private SoilDataSO soilPlacedData;
 
+    private PlantGrowthState currentState = PlantGrowthState.Empty;
     private GameObject currentPlantVisual;
 
     //private float growthTimer;
 
     private void OnTriggerEnter(Collider other)
     {
+       CheckPlatio(other);
+    }
+
+    private void CheckPlatio(Collider other)
+    {
+       if (!other.TryGetComponent(out Seed seed))
+       {
+           ConfirmSeed(seed);
+           return;
+       }
+
+        if (!other.TryGetComponent(out SoilBag soilBag))
+       {
+           ConfirmSoilBag();
+           return;
+       }
+            
+    }
+
+    private void ConfirmSoilBag()
+    {
+        Debug.Log("enterrado");
+    }
+
+    private void ConfirmSeed(Seed seed)
+    {
         if (currentState != PlantGrowthState.Empty)
-            return;
+        return;
 
-        if (!other.TryGetComponent(out Seed seed))
-            return;
-
-        if (!other.TryGetComponent(out ObjectGrabbable grabbable))
+        if (!seed.TryGetComponent(out ObjectGrabbable grabbable))
         return;
 
         if (grabbable.IsBeingHeld)

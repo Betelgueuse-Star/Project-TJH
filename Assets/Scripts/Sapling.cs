@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(ObjectGrabbable))]
 public class Sapling : MonoBehaviour, IDeliverable
 {
-    [Header("Delivery")]
+    [Header("ItemTypeSO")]
     [SerializeField] private ItemTypeSO itemType;
 
     private ObjectGrabbable objectGrabbable;
