@@ -22,13 +22,13 @@ public class PlantingArea : MonoBehaviour
 
     private void CheckPlatio(Collider other)
     {
-       if (!other.TryGetComponent(out Seed seed))
+       if (other.TryGetComponent(out Seed seed))
        {
            ConfirmSeed(seed);
            return;
        }
 
-        if (!other.TryGetComponent(out SoilBag soilBag))
+        if (other.TryGetComponent(out SoilBag soilBag))
        {
            ConfirmSoilBag();
            return;
