@@ -21,11 +21,12 @@ Shader "Custom/Advanced Outline Fill" {
 
     Pass {
       Name "Fill"
-      Cull Off
+      Cull Off 
       ZTest [_ZTest]
       ZWrite Off
       Blend SrcAlpha OneMinusSrcAlpha
       ColorMask RGB
+
 
       Stencil {
         Ref 1

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using ITISKIRUHERE;
 
 public class ObjectGrabbable : MonoBehaviour
 {
@@ -29,6 +30,7 @@ public class ObjectGrabbable : MonoBehaviour
             //rb.MoveRotation(ObjectGrabPointTransform.rotation);
         }
     }
+
     public void Grab(Transform grabPoint)
     {
         this.ObjectGrabPointTransform = grabPoint;

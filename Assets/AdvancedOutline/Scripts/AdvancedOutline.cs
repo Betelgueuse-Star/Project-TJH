@@ -96,13 +96,40 @@ namespace ITISKIRUHERE
             }
         }
 
+        //public float OutlineWidth
+        //{
+        //    get => _outlineWidth;
+        //    set
+        //    {
+        //        _outlineWidth = value;
+        //        _needsUpdate = true;
+        //    }
+        //}
+
+        // Mudamo outline width para que quando for 0, ele remova o material de outline dos renderers, e quando for maior que 0, ele aplique o material de outline nos renderers
         public float OutlineWidth
         {
             get => _outlineWidth;
+
             set
             {
+                bool wasVisible = _outlineWidth > 0f;
+                bool willBeVisible = value > 0f;
+
                 _outlineWidth = value;
                 _needsUpdate = true;
+
+                if (wasVisible == willBeVisible)
+                    return;
+
+                if (willBeVisible)
+                {
+                    ApplyMaterialsToRenderers();
+                }
+                else
+                {
+                    CleanAllOutlineMaterialsFromRenderers();
+                }
             }
         }
 
@@ -285,13 +312,17 @@ namespace ITISKIRUHERE
                 _tempMaterials.RemoveAll( mat => mat != null && 
                     ( mat.shader == _outlineMaskShader || mat.shader == _outlineFillShader ) );
 
-                if ( _outlineMaskMaterial )
+                if (_outlineWidth > 0f) //antes nao tinha > 0f, mas se for 0, nao faz sentido aplicar o material
                 {
-                    _tempMaterials.Add( _outlineMaskMaterial );
-                }
-                if ( _outlineFillMaterial )
-                {
-                    _tempMaterials.Add( _outlineFillMaterial );
+                    if (_outlineMaskMaterial)
+                    {
+                        _tempMaterials.Add(_outlineMaskMaterial);
+                    }
+
+                    if (_outlineFillMaterial)
+                    {
+                        _tempMaterials.Add(_outlineFillMaterial);
+                    }
                 }
 
                 renderer.sharedMaterials = _tempMaterials.ToArray();
