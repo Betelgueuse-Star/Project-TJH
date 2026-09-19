@@ -41,7 +41,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4065981189795368373}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 0}
 --- !u!23 &2155970701612657549
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -68,6 +68,8 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -124,6 +126,8 @@ GameObject:
   - component: {fileID: 8949379910925419978}
   - component: {fileID: 963454138817552987}
   - component: {fileID: 7356190866648792451}
+  - component: {fileID: 811905063286798668}
+  - component: {fileID: 3890150764514461821}
   m_Layer: 0
   m_Name: ItemStorage
   m_TagString: Untagged
@@ -201,7 +205,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00784aa63116ac743908dec751ec5146, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemStorage
-  startingItemType: {fileID: 11400000, guid: 26c0c4642bb696b4280917749ac717df, type: 2}
+  startingItemType: {fileID: 11400000, guid: 4335e068ec54e104dbe4e83cf95e7e24, type: 2}
   amountText: {fileID: 0}
   currentAmount: 10
   spawnPoint: {fileID: 0}
+--- !u!114 &811905063286798668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9000948356883473885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bc005968ab7a6547879f75e85698284, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ITISKIRUHERE.AdvancedOutline
+  _outlineMaskShader: {fileID: 4800000, guid: c2f5089722420f44ea03b3dbb08dca7e, type: 3}
+  _outlineFillShader: {fileID: 4800000, guid: 6cdd088550bc7e6478ae291e0e83fabb, type: 3}
+  _outlineMode: 1
+  _outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  _outlineWidth: 4
+  _pulseWidth: 0
+  _pulseSpeed: 2
+  _pulseMinWidth: 1.5
+  _pulseMaxWidth: 5
+  _rainbowColor: 0
+  _rainbowSpeed: 0.5
+  _dashedPattern: 0
+  _dashScale: 0.03
+  _dashSpeed: 15
+  _precomputeOutline: 0
+  _bakeKeys: []
+  _bakeValues: []
+--- !u!114 &3890150764514461821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9000948356883473885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37a0e5c2850547c418af8e10d597d31b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractableOutline

@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 5929700184171359820}
   - component: {fileID: 6204537304855796903}
   - component: {fileID: 2928312962458977403}
+  - component: {fileID: -4020095795740376555}
+  - component: {fileID: 5409535400754716697}
   m_Layer: 0
   m_Name: SoloBagPrefab
   m_TagString: Untagged
@@ -168,3 +170,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoloBag
   soilData: {fileID: 11400000, guid: 6953746baa99c834cb6f57a8c19cd0f3, type: 2}
   itemType: {fileID: 11400000, guid: b127ea847b31fad4f9da06c913f27271, type: 2}
+--- !u!114 &-4020095795740376555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6208110011841838250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37a0e5c2850547c418af8e10d597d31b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractableOutline
+--- !u!114 &5409535400754716697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6208110011841838250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bc005968ab7a6547879f75e85698284, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ITISKIRUHERE.AdvancedOutline
+  _outlineMaskShader: {fileID: 4800000, guid: c2f5089722420f44ea03b3dbb08dca7e, type: 3}
+  _outlineFillShader: {fileID: 4800000, guid: 6cdd088550bc7e6478ae291e0e83fabb, type: 3}
+  _outlineMode: 1
+  _outlineColor: {r: 0, g: 1, b: 1, a: 1}
+  _outlineWidth: 4
+  _pulseWidth: 0
+  _pulseSpeed: 2
+  _pulseMinWidth: 1.5
+  _pulseMaxWidth: 5
+  _rainbowColor: 0
+  _rainbowSpeed: 0.5
+  _dashedPattern: 0
+  _dashScale: 0.03
+  _dashSpeed: 15
+  _precomputeOutline: 0
+  _bakeKeys: []
+  _bakeValues: []
