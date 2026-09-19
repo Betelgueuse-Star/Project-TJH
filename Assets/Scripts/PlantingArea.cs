@@ -12,6 +12,7 @@ public class PlantingArea : MonoBehaviour
 
     private PlantGrowthState currentState = PlantGrowthState.Empty;
     private GameObject currentPlantVisual;
+    private GameObject currentSoilVisual;
 
     //private float growthTimer;
 
@@ -30,15 +31,24 @@ public class PlantingArea : MonoBehaviour
 
         if (other.TryGetComponent(out SoilBag soilBag))
        {
-           ConfirmSoilBag();
+           ConfirmSoilBag(soilBag);
            return;
        }
             
     }
 
-    private void ConfirmSoilBag()
+    private void ConfirmSoilBag(SoilBag soilBag)
     {
-        Debug.Log("enterrado");
+        if (soilPlacedData != null)
+            return;
+
+        if (!soilBag.TryGetComponent(out ObjectGrabbable grabbable))
+            return;
+
+        if (grabbable.IsBeingHeld)
+            return;
+
+        PlaceSoil(soilBag);
     }
 
     private void ConfirmSeed(Seed seed)
@@ -53,6 +63,22 @@ public class PlantingArea : MonoBehaviour
             return;
 
         PlantSeed(seed);
+    }
+
+    private void PlaceSoil(SoilBag soilBag)
+    {
+        soilPlacedData = soilBag.SoilData;
+
+        Destroy(soilBag.gameObject);
+
+        if (soilPlacedData.soilPrefab != null)
+        {
+            currentSoilVisual = Instantiate(
+                soilPlacedData.soilPrefab,
+                plantingPoint.position,
+                plantingPoint.rotation
+            );
+        }
     }
 
 
@@ -70,7 +96,7 @@ public class PlantingArea : MonoBehaviour
     }
     private IEnumerator GrowPlant()
     {
-        float stageTime = plantedSeedData.growthTime / 3f;
+        float stageTime = plantedSeedData.baseGrowthTime / 3f;
 
         yield return new WaitForSeconds(stageTime);
 

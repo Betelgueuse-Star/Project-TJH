@@ -6,6 +6,10 @@ public class SoilDataSO : ScriptableObject
     [Header("Informações")]
     public string soilName;
 
+    [Header("Status")]
+    public float growthMultiplier;
+    public int maxUses;
+
     [Header("SoilPrefab")]
     public GameObject soilPrefab;
     

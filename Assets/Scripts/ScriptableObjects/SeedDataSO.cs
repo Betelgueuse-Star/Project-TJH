@@ -6,9 +6,10 @@ public class SeedDataSO : ScriptableObject
     [Header("Informações")]
     public string seedName;
 
-    [Header("Crescimento")]
+    [Header("Status")]
     [Min(1)]
-    public float growthTime = 30f;
+    public float baseGrowthTime = 120f;
+    public SoilDataSO recommendedSoil;
 
     [Header("Estágios Visuais")]
     public GameObject seedPrefab;
