@@ -6,7 +6,7 @@ using UnityEngine;
 namespace ITISKIRUHERE
 {
     [DisallowMultipleComponent]
-    [ExecuteAlways]
+    //[ExecuteAlways] essa praga demoniaca
     public class AdvancedOutline : MonoBehaviour
     {
         public enum Mode

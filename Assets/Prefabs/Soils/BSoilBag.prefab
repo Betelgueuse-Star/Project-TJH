@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: -4020095795740376555}
   - component: {fileID: 5409535400754716697}
   m_Layer: 0
-  m_Name: SoloBagPrefab
+  m_Name: BSoilBag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72,7 +72,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a1debdb49d4207a46ad35fb2b1c56a84, type: 2}
+  - {fileID: 2100000, guid: 3562e43168147394090a35db77f7ac20, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -168,8 +168,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac9665c6f71b62e4ebd43f2b51992c75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoloBag
-  soilData: {fileID: 11400000, guid: 6953746baa99c834cb6f57a8c19cd0f3, type: 2}
-  itemType: {fileID: 11400000, guid: b127ea847b31fad4f9da06c913f27271, type: 2}
+  soilData: {fileID: 11400000, guid: 4aef391ab36a6954ebe7bd2864e126d5, type: 2}
+  itemType: {fileID: 11400000, guid: d5d1f2a50b8237848abb1c9558f573af, type: 2}
 --- !u!114 &-4020095795740376555
 MonoBehaviour:
   m_ObjectHideFlags: 0

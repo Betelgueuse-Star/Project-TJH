@@ -12,16 +12,4 @@ public class SoilBag : MonoBehaviour, IStorableItem
 
     public SoilDataSO SoilData => soilData;
     public ItemTypeSO ItemType => itemType;
-
-    //public bool IsBuried { get; private set; }
-
-    //public void Bury()
-    //{
-    //    if (IsBuried)
-    //        return;
-
-    //    IsBuried = true;
-
-    //    Debug.Log(soilData.soilName + " foi colocado!");
-    //}
 }

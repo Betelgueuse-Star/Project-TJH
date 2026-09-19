@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7011881958110335058}
   - component: {fileID: 9085545261314268408}
   m_Layer: 0
-  m_Name: BaseSoil
+  m_Name: OakSoilPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -66,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a1debdb49d4207a46ad35fb2b1c56a84, type: 2}
+  - {fileID: 2100000, guid: d30ff056ae9a542489a26dbb5f2fcd9b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -7,6 +7,7 @@ public class SoilDataSO : ScriptableObject
     public string soilName;
 
     [Header("Status")]
+    [Min(0.1f)] //evita o 0 acidentalmente
     public float growthMultiplier;
     public int maxUses;
 

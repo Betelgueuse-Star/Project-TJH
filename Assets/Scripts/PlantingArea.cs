@@ -18,26 +18,26 @@ public class PlantingArea : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-       CheckPlatio(other);
+       HandleObjectEntered(other);
     }
 
-    private void CheckPlatio(Collider other)
+    private void HandleObjectEntered(Collider other)
     {
        if (other.TryGetComponent(out Seed seed))
        {
-           ConfirmSeed(seed);
+           TryPlantSeed(seed);
            return;
        }
 
         if (other.TryGetComponent(out SoilBag soilBag))
        {
-           ConfirmSoilBag(soilBag);
+           TryPlaceSoil(soilBag);
            return;
        }
             
     }
 
-    private void ConfirmSoilBag(SoilBag soilBag)
+    private void TryPlaceSoil(SoilBag soilBag)
     {
         if (soilPlacedData != null)
             return;
@@ -51,10 +51,14 @@ public class PlantingArea : MonoBehaviour
         PlaceSoil(soilBag);
     }
 
-    private void ConfirmSeed(Seed seed)
+    private void TryPlantSeed(Seed seed)
     {
         if (currentState != PlantGrowthState.Empty)
         return;
+
+        if (soilPlacedData == null)
+            return;
+
 
         if (!seed.TryGetComponent(out ObjectGrabbable grabbable))
         return;
@@ -94,9 +98,11 @@ public class PlantingArea : MonoBehaviour
 
         StartCoroutine(GrowPlant());
     }
+
     private IEnumerator GrowPlant()
     {
-        float stageTime = plantedSeedData.baseGrowthTime / 3f;
+        float totalGrowthTime = CalculateGrowthTime();
+        float stageTime = totalGrowthTime / 3f;
 
         yield return new WaitForSeconds(stageTime);
 
@@ -119,7 +125,18 @@ public class PlantingArea : MonoBehaviour
 
         //Debug.Log("Planta mudou para: " + currentState);
     }
+    private float CalculateGrowthTime()
+    {
+        float multiplier = 1f;
 
+        if (soilPlacedData != null &&
+            soilPlacedData == plantedSeedData.recommendedSoil)
+        {
+            multiplier = soilPlacedData.growthMultiplier;
+        }
+
+        return plantedSeedData.baseGrowthTime / multiplier;
+    }
 
     private void UpdatePlantVisual()
     {
