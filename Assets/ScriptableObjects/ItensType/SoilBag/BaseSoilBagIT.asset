@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5685d3592fb34e42adaecd853a27bff, type: 3}
   m_Name: BaseSoilBagIT
   m_EditorClassIdentifier: Assembly-CSharp::ItemTypeSO
-  itemPrefab: {fileID: 6208110011841838250, guid: e223f24ad8ede824b9a073006be88d35, type: 3}
+  itemPrefab: {fileID: 6208110011841838250, guid: a725efecf55f6bf4db31732a9dd8fb64, type: 3}

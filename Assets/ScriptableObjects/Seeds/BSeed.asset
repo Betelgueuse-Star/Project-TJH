@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: BSeed
   m_EditorClassIdentifier: Assembly-CSharp::SeedDataSO
   seedName: BSeed
-  growthTime: 30
+  baseGrowthTime: 120
+  recommendedSoil: {fileID: 11400000, guid: 4aef391ab36a6954ebe7bd2864e126d5, type: 2}
   seedPrefab: {fileID: 6208110011841838250, guid: 6c6121db4ce9a00408448c439ed6d83a, type: 3}
   germinatingPrefab: {fileID: 6208110011841838250, guid: b9911f06873124144a7897ad8aa7abcc, type: 3}
   growingPrefab: {fileID: 6208110011841838250, guid: 5d5b0e89e7dc5f349ba1a4c9c582d19b, type: 3}

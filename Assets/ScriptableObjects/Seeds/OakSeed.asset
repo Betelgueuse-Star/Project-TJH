@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SeedDataSO
   seedName: OakSeed
   baseGrowthTime: 100
-  recommendedSoil: {fileID: 11400000, guid: 6953746baa99c834cb6f57a8c19cd0f3, type: 2}
+  recommendedSoil: {fileID: 11400000, guid: ae8179cbcd61e6f4b9bab073783a5e35, type: 2}
   seedPrefab: {fileID: 6208110011841838250, guid: 5bf0bd447da2c044297d2da62f585c7d, type: 3}
   germinatingPrefab: {fileID: 6208110011841838250, guid: 369d0142c9673a140ae99f5f6de58f2b, type: 3}
   growingPrefab: {fileID: 6208110011841838250, guid: 55bd5a78f1d30b543b5e47e065ebeb65, type: 3}

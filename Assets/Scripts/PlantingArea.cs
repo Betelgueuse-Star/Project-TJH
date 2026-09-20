@@ -30,41 +30,29 @@ public class PlantingArea : MonoBehaviour
        }
 
         if (other.TryGetComponent(out SoilBag soilBag))
-       {
-           TryPlaceSoil(soilBag);
-           return;
-       }
-            
+        {
+            TryPlaceSoil(soilBag);
+            return;
+        }       
     }
 
     private void TryPlaceSoil(SoilBag soilBag)
     {
-        if (soilPlacedData != null)
-            return;
+        if (soilPlacedData != null) return; 
+        if (!soilBag.TryGetComponent(out ObjectGrabbable grabbable)) return;
+        if (grabbable.IsBeingHeld) return; 
 
-        if (!soilBag.TryGetComponent(out ObjectGrabbable grabbable))
-            return;
-
-        if (grabbable.IsBeingHeld)
-            return;
 
         PlaceSoil(soilBag);
     }
 
     private void TryPlantSeed(Seed seed)
     {
-        if (currentState != PlantGrowthState.Empty)
-        return;
+        if (currentState != PlantGrowthState.Empty) return;
+        if (soilPlacedData == null) return;
+        if (!seed.TryGetComponent(out ObjectGrabbable grabbable)) return; 
+        if (grabbable.IsBeingHeld) return; 
 
-        if (soilPlacedData == null)
-            return;
-
-
-        if (!seed.TryGetComponent(out ObjectGrabbable grabbable))
-        return;
-
-        if (grabbable.IsBeingHeld)
-            return;
 
         PlantSeed(seed);
     }
@@ -117,25 +105,23 @@ public class PlantingArea : MonoBehaviour
         ChangeState(PlantGrowthState.Ready);
     }
 
-    private void ChangeState(PlantGrowthState newState)
-    {
-        currentState = newState;
-
-        UpdatePlantVisual();
-
-        //Debug.Log("Planta mudou para: " + currentState);
-    }
     private float CalculateGrowthTime()
     {
         float multiplier = 1f;
 
-        if (soilPlacedData != null &&
-            soilPlacedData == plantedSeedData.recommendedSoil)
-        {
+        // Check if soilPlacedData is not null and matches the recommended soil for the planted seed
+        if (soilPlacedData != null && soilPlacedData == plantedSeedData.recommendedSoil) {
+
             multiplier = soilPlacedData.growthMultiplier;
         }
 
         return plantedSeedData.baseGrowthTime / multiplier;
+    }
+
+    private void ChangeState(PlantGrowthState newState)
+    {
+        currentState = newState;
+        UpdatePlantVisual();
     }
 
     private void UpdatePlantVisual()

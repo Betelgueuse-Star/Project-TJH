@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5685d3592fb34e42adaecd853a27bff, type: 3}
   m_Name: OakSoilBagIT
   m_EditorClassIdentifier: Assembly-CSharp::ItemTypeSO
-  itemPrefab: {fileID: 6208110011841838250, guid: c9c6f3f2b664a964f8bbd3b295405927, type: 3}
+  itemPrefab: {fileID: 6208110011841838250, guid: d4d57b9dc7d40c34c8c985a5e496b198, type: 3}

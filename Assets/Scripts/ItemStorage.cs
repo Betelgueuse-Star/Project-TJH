@@ -64,7 +64,7 @@ public class ItemStorage : MonoBehaviour, IInteractable
     }
     public void Interact(Player player)
     {
-        if (player.IsHoldingObject)
+        if (player.IsHoldingSomething)
             return;
 
         if (IsEmpty)

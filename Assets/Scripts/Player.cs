@@ -5,14 +5,19 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     [SerializeField] private GameObject playerCameraGameObject;
-    [SerializeField] private GameObject objectGrabPointGameObject;
+    [SerializeField] private Transform objectGrabPointTransform;
+    [SerializeField] private Transform toolHoldPointTransform;
     [SerializeField] private LayerMask interactionLayerMask;
     [SerializeField] private float interactionRange = 3f;
 
-    private ObjectGrabbable objectGrabbable;
-    private InteractableOutline currentOutline;
+    private GameObject currentTool;
+    private GameObject currentToolWorldPrefab;
 
-    public bool IsHoldingObject => objectGrabbable != null;
+    private ObjectGrabbable objectGrabbable;
+    private InteractableOutline currentOutline; 
+
+    public GameObject CurrentTool => currentTool;
+    public bool IsHoldingSomething => objectGrabbable != null || currentTool != null;
 
     private void Update()
     {
@@ -21,7 +26,7 @@ public class Player : MonoBehaviour
 
     private void UpdateOutline()
     {
-        if (IsHoldingObject)
+        if (IsHoldingSomething)
         {
             HideCurrentOutline();
             return;
@@ -63,18 +68,54 @@ public class Player : MonoBehaviour
         currentOutline = null;
     }
 
+    private void DropCurrentItem()
+    {
+        if (objectGrabbable != null)
+        {
+            objectGrabbable.Drop();
+            objectGrabbable = null;
+            return;
+        }
+
+        //criar um prefab do objeto que estava no mundo, instanciar ele e destruir o objeto que estava na mão
+        if (currentTool != null)  //&& currentToolWorldPrefab != null - teste
+        {
+            Instantiate(
+                currentToolWorldPrefab,
+                toolHoldPointTransform.position,
+                transform.rotation
+            );
+
+            Destroy(currentTool);
+
+            currentTool = null;
+            return;
+        }
+    }
+
+     //armazena a referencia do prefab do objeto que foi pego e instancia ele,e destrói o objeto que estava no mundo mas tbm guarda a referencia.
+    private void GrabTool(Tool newTool) 
+    {
+        if (IsHoldingSomething)
+            return; 
+
+        currentToolWorldPrefab = newTool.WorldPrefab;
+
+        currentTool = Instantiate(
+            newTool.EquippedPrefab,
+            toolHoldPointTransform
+        );
+
+        currentTool.transform.localPosition = Vector3.zero;
+        currentTool.transform.localRotation = Quaternion.identity;
+
+        Destroy(newTool.gameObject);
+    }
+
     public void OnInteract(InputValue value)
     {
         if (!value.isPressed)
             return;
-
-        if (IsHoldingObject)
-        {
-            objectGrabbable.Drop();
-            objectGrabbable = null;
-
-            return;
-        }
 
         //se nao acertar nada, return
         if (!Physics.Raycast(playerCameraGameObject.transform.position, playerCameraGameObject.transform.forward, out RaycastHit raycastHitInfo, interactionRange, interactionLayerMask))
@@ -88,19 +129,32 @@ public class Player : MonoBehaviour
             GrabObject(grabbable);
             return;
         }
+        if (raycastHitInfo.transform.TryGetComponent(out Tool tool)) //atribui o objeto que foi pego para a variavel objectGrabbable
+        {
+            GrabTool(tool);
+            return;
+        }
         if (raycastHitInfo.transform.TryGetComponent(out IInteractable interactable))//busca se o scriptpossui a interface IInteractable
         {
             interactable.Interact(this);
         }
     }
 
+    public void OnDrop(InputValue value)
+    {
+        if (!value.isPressed)
+            return;
+
+        DropCurrentItem();
+    }
+
     public void GrabObject(ObjectGrabbable newObjectGrabbable)
     {
-        if (IsHoldingObject)
+        if (IsHoldingSomething)
             return;
 
         objectGrabbable = newObjectGrabbable;
 
-        objectGrabbable.Grab(objectGrabPointGameObject.transform);
+        objectGrabbable.Grab(objectGrabPointTransform);
     }
 }
