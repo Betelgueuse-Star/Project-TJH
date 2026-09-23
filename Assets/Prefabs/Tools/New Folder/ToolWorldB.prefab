@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 1920612982788233784}
   - component: {fileID: 8399822885956166879}
   m_Layer: 0
-  m_Name: ToolWorldA
+  m_Name: ToolWorldB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -157,8 +157,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27ccf968fe6efb145ac6dc5e9291e8c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tool
-  worldPrefab: {fileID: 3163024308589259213, guid: 00140b92170c5074d919aa12b6710d86, type: 3}
-  equippedPrefab: {fileID: 3163024308589259213, guid: 7743c39e658ab454aad752f19d036984, type: 3}
+  worldPrefab: {fileID: 3163024308589259213, guid: 33653ed738b17804c8f638948aca1747, type: 3}
+  equippedPrefab: {fileID: 3163024308589259213, guid: 7aa6a0fa311358f469cb7e40f47711ef, type: 3}
 --- !u!114 &1920612982788233784
 MonoBehaviour:
   m_ObjectHideFlags: 0

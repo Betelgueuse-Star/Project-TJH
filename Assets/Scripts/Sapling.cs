@@ -43,7 +43,7 @@ public class Sapling : MonoBehaviour, IDeliverable
         if (plantingArea == null)
             return;
 
-        plantingArea.RemovePlant();
+        plantingArea.RemoveGrowPlant();
 
         plantingArea = null;
     }

@@ -158,7 +158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tool
   worldPrefab: {fileID: 3163024308589259213, guid: 01ecacca433b5cc448562387cf2c90fe, type: 3}
-  equippedPrefab: {fileID: 3163024308589259213, guid: 67b834ced2335454b8c4423a19bf5bbd, type: 3}
+  equippedPrefab: {fileID: 3163024308589259213, guid: 7743c39e658ab454aad752f19d036984, type: 3}
 --- !u!114 &1920612982788233784
 MonoBehaviour:
   m_ObjectHideFlags: 0

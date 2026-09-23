@@ -114,8 +114,6 @@ public class Player : MonoBehaviour
 
     public void OnInteract(InputValue value)
     {
-        if (!value.isPressed)
-            return;
 
         //se nao acertar nada, return
         if (!Physics.Raycast(playerCameraGameObject.transform.position, playerCameraGameObject.transform.forward, out RaycastHit raycastHitInfo, interactionRange, interactionLayerMask))
