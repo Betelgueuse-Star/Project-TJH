@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7423770118163320945
+--- !u!1 &1695854478996432754
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,45 +8,44 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7726417054917429622}
-  - component: {fileID: 6572587819263856003}
-  - component: {fileID: 5236698548796185039}
-  - component: {fileID: 6033472750603016350}
-  - component: {fileID: 6258475607760448477}
-  - component: {fileID: 443817771699559514}
-  - component: {fileID: 8170595723862235319}
-  - component: {fileID: 3190232245461760013}
-  - component: {fileID: 8766110249319359142}
-  - component: {fileID: 6813236786342440180}
+  - component: {fileID: 2286343588989729598}
+  - component: {fileID: 2374595722298907809}
+  - component: {fileID: 4211448839450226323}
+  - component: {fileID: 238155450113913090}
+  - component: {fileID: 1699921477920418820}
+  - component: {fileID: 3383778110523287678}
+  - component: {fileID: 6443895356590094154}
+  - component: {fileID: 135900614976844025}
+  - component: {fileID: 1992954369565113448}
   m_Layer: 0
-  m_Name: GrabbleCube
+  m_Name: Watertank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7726417054917429622
+--- !u!4 &2286343588989729598
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7423770118163320945}
+  m_GameObject: {fileID: 1695854478996432754}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6572587819263856003
+--- !u!114 &2374595722298907809
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7423770118163320945}
+  m_GameObject: {fileID: 1695854478996432754}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8233d90336aea43098adf6dbabd606a2, type: 3}
@@ -167,53 +166,53 @@ MonoBehaviour:
   - m_Vertices: 0b0000000e00000012000000
   m_SharedTextures: []
   m_Positions:
-  - {x: -0.5, y: -0.5, z: 0.5}
-  - {x: 0.5, y: -0.5, z: 0.5}
-  - {x: -0.5, y: 0.5, z: 0.5}
-  - {x: 0.5, y: 0.5, z: 0.5}
-  - {x: 0.5, y: -0.5, z: 0.5}
-  - {x: 0.5, y: -0.5, z: -0.5}
-  - {x: 0.5, y: 0.5, z: 0.5}
-  - {x: 0.5, y: 0.5, z: -0.5}
-  - {x: 0.5, y: -0.5, z: -0.5}
-  - {x: -0.5, y: -0.5, z: -0.5}
-  - {x: 0.5, y: 0.5, z: -0.5}
-  - {x: -0.5, y: 0.5, z: -0.5}
-  - {x: -0.5, y: -0.5, z: -0.5}
-  - {x: -0.5, y: -0.5, z: 0.5}
-  - {x: -0.5, y: 0.5, z: -0.5}
-  - {x: -0.5, y: 0.5, z: 0.5}
-  - {x: -0.5, y: 0.5, z: 0.5}
-  - {x: 0.5, y: 0.5, z: 0.5}
-  - {x: -0.5, y: 0.5, z: -0.5}
-  - {x: 0.5, y: 0.5, z: -0.5}
-  - {x: -0.5, y: -0.5, z: -0.5}
-  - {x: 0.5, y: -0.5, z: -0.5}
-  - {x: -0.5, y: -0.5, z: 0.5}
-  - {x: 0.5, y: -0.5, z: 0.5}
+  - {x: -0.5, y: -0.99999994, z: 1.5}
+  - {x: 0.5, y: -0.99999994, z: 1.5}
+  - {x: -0.5, y: 0.99999994, z: 1.5}
+  - {x: 0.5, y: 0.99999994, z: 1.5}
+  - {x: 0.5, y: -0.99999994, z: 1.5}
+  - {x: 0.5, y: -0.99999994, z: -1.5}
+  - {x: 0.5, y: 0.99999994, z: 1.5}
+  - {x: 0.5, y: 0.99999994, z: -1.5}
+  - {x: 0.5, y: -0.99999994, z: -1.5}
+  - {x: -0.5, y: -0.99999994, z: -1.5}
+  - {x: 0.5, y: 0.99999994, z: -1.5}
+  - {x: -0.5, y: 0.99999994, z: -1.5}
+  - {x: -0.5, y: -0.99999994, z: -1.5}
+  - {x: -0.5, y: -0.99999994, z: 1.5}
+  - {x: -0.5, y: 0.99999994, z: -1.5}
+  - {x: -0.5, y: 0.99999994, z: 1.5}
+  - {x: -0.5, y: 0.99999994, z: 1.5}
+  - {x: 0.5, y: 0.99999994, z: 1.5}
+  - {x: -0.5, y: 0.99999994, z: -1.5}
+  - {x: 0.5, y: 0.99999994, z: -1.5}
+  - {x: -0.5, y: -0.99999994, z: -1.5}
+  - {x: 0.5, y: -0.99999994, z: -1.5}
+  - {x: -0.5, y: -0.99999994, z: 1.5}
+  - {x: 0.5, y: -0.99999994, z: 1.5}
   m_Textures0:
-  - {x: 1, y: 0}
-  - {x: 0, y: 0}
+  - {x: 1, y: -0.9999999}
+  - {x: 0, y: -0.9999999}
   - {x: 1, y: 1}
   - {x: 0, y: 1}
-  - {x: 1, y: 0}
-  - {x: 0, y: 0}
+  - {x: 3, y: -0.9999999}
+  - {x: 0, y: -0.9999999}
+  - {x: 3, y: 1}
+  - {x: 0, y: 1}
+  - {x: 1, y: -0.9999999}
+  - {x: 0, y: -0.9999999}
   - {x: 1, y: 1}
   - {x: 0, y: 1}
-  - {x: 1, y: 0}
-  - {x: 0, y: 0}
-  - {x: 1, y: 1}
-  - {x: 0, y: 1}
-  - {x: 1, y: 0}
-  - {x: 0, y: 0}
-  - {x: 1, y: 1}
+  - {x: 3, y: -0.9999999}
+  - {x: 0, y: -0.9999999}
+  - {x: 3, y: 1}
   - {x: 0, y: 1}
   - {x: 0, y: 1}
   - {x: 1, y: 1}
-  - {x: 0, y: 0}
-  - {x: 1, y: 0}
-  - {x: 1, y: 0}
-  - {x: 0, y: 0}
+  - {x: 0, y: -2}
+  - {x: 1, y: -2}
+  - {x: 1, y: -2}
+  - {x: 0, y: -2}
   - {x: 1, y: 1}
   - {x: 0, y: 1}
   m_Textures2: []
@@ -243,7 +242,31 @@ MonoBehaviour:
   - {x: -1, y: 0, z: 0, w: -1}
   - {x: -1, y: 0, z: 0, w: -1}
   - {x: -1, y: 0, z: 0, w: -1}
-  m_Colors: []
+  m_Colors:
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
+  - {r: 0.21219465, g: 0.70870423, b: 1, a: 1}
   m_UnwrapParameters:
     m_HardAngle: 88
     m_PackMargin: 20
@@ -252,18 +275,18 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2076
+  m_VersionIndex: 2025
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
---- !u!114 &5236698548796185039
+--- !u!114 &4211448839450226323
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7423770118163320945}
+  m_GameObject: {fileID: 1695854478996432754}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1ca002da428252441b92f28d83c8a65f, type: 3}
@@ -272,8 +295,8 @@ MonoBehaviour:
   m_Shape:
     rid: 537481027203366931
   m_ShapeRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_UnmodifiedMeshVersion: 2055
-  m_Size: {x: -1, y: 1, z: 1}
+  m_UnmodifiedMeshVersion: 2019
+  m_Size: {x: -1, y: 1.9999999, z: 3}
   m_LocalCenter: {x: 0, y: 0, z: 0}
   references:
     version: 2
@@ -281,13 +304,13 @@ MonoBehaviour:
     - rid: 537481027203366931
       type: {class: Cube, ns: UnityEngine.ProBuilder.Shapes, asm: Unity.ProBuilder}
       data: 
---- !u!23 &6033472750603016350
+--- !u!23 &238155450113913090
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7423770118163320945}
+  m_GameObject: {fileID: 1695854478996432754}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -330,48 +353,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &6258475607760448477
+--- !u!33 &1699921477920418820
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7423770118163320945}
+  m_GameObject: {fileID: 1695854478996432754}
   m_Mesh: {fileID: 0}
---- !u!54 &443817771699559514
-Rigidbody:
+--- !u!64 &3383778110523287678
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7423770118163320945}
-  serializedVersion: 5
-  m_Mass: 0.3
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!65 &8170595723862235319
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7423770118163320945}
+  m_GameObject: {fileID: 1695854478996432754}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -383,40 +379,31 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3190232245461760013
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
+--- !u!114 &6443895356590094154
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7423770118163320945}
+  m_GameObject: {fileID: 1695854478996432754}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aac842d1d9db06045939631f9bb32971, type: 3}
+  m_Script: {fileID: 11500000, guid: 26b319939ecc7924eb205ec3a9593e5b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ObjectGrabbable
---- !u!114 &8766110249319359142
+  m_EditorClassIdentifier: Assembly-CSharp::WaterTank
+  maxWater: 100
+  currentWater: 0
+--- !u!114 &135900614976844025
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7423770118163320945}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37a0e5c2850547c418af8e10d597d31b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InteractableOutline
---- !u!114 &6813236786342440180
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7423770118163320945}
+  m_GameObject: {fileID: 1695854478996432754}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bc005968ab7a6547879f75e85698284, type: 3}
@@ -424,9 +411,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ITISKIRUHERE.AdvancedOutline
   _outlineMaskShader: {fileID: 4800000, guid: c2f5089722420f44ea03b3dbb08dca7e, type: 3}
   _outlineFillShader: {fileID: 4800000, guid: 6cdd088550bc7e6478ae291e0e83fabb, type: 3}
-  _outlineMode: 0
-  _outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  _outlineWidth: 10
+  _outlineMode: 1
+  _outlineColor: {r: 0, g: 1, b: 1, a: 1}
+  _outlineWidth: 4
   _pulseWidth: 0
   _pulseSpeed: 2
   _pulseMinWidth: 1.5
@@ -439,3 +426,15 @@ MonoBehaviour:
   _precomputeOutline: 0
   _bakeKeys: []
   _bakeValues: []
+--- !u!114 &1992954369565113448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1695854478996432754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37a0e5c2850547c418af8e10d597d31b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractableOutline

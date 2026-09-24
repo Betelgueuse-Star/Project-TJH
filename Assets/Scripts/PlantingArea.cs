@@ -258,10 +258,10 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
     public void RemoveGrowPlant()
     {
         currentPlantVisual = null;
-
         plantedSeedData = null;
-
         currentState = PlantGrowthState.Empty;
+
+        KillPlant();
 
         Debug.Log("Planta removida. Área disponível novamente.");
     }

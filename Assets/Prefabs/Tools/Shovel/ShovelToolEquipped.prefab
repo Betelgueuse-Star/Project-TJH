@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6363157392164114218}
   - component: {fileID: -5941076931128123378}
   m_Layer: 0
-  m_Name: ShovelEquipped
+  m_Name: ShovelToolEquipped
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27,13 +27,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3163024308589259213}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0.4333445, w: 0.90122837}
-  m_LocalPosition: {x: 1.41887, y: 1.64916, z: 2.591}
-  m_LocalScale: {x: 0.2, y: 0.79, z: 0.2}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.69071275, y: 0.016863951, z: 0.23994}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 51.36}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1119442362260923352
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -67,7 +67,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: a1debdb49d4207a46ad35fb2b1c56a84, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

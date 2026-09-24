@@ -6,16 +6,13 @@ public class WateringCan : MonoBehaviour
 {
     [Header("Água")]
     [SerializeField] private float maxWater = 10f;
+    [SerializeField] private float currentWater;
 
-    [Header("Rega")]
+    [Header("Quantidade Que Rega")]
     [SerializeField] private float waterAmount= 0.2f;
-
-    private float currentWater;
-   
 
     public float WaterAmount => waterAmount;
     public float CurrentWater => currentWater;
-    public float MaxWater => maxWater;
 
     public float GetAndRemoveWater(float amount)
     {
