@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4129794895698016679}
   - component: {fileID: 5664671792691860422}
   - component: {fileID: 6706328112685109612}
+  - component: {fileID: 5608887536917728394}
   m_Layer: 0
   m_Name: PlatingArea
   m_TagString: Untagged
@@ -70,7 +71,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a82a627546f70a4e95fceb8b73a6f14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantingArea
-  plantingPoint: {fileID: 3099075977206210838}
 --- !u!114 &5664671792691860422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,8 +85,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ITISKIRUHERE.AdvancedOutline
   _outlineMaskShader: {fileID: 4800000, guid: c2f5089722420f44ea03b3dbb08dca7e, type: 3}
   _outlineFillShader: {fileID: 4800000, guid: 6cdd088550bc7e6478ae291e0e83fabb, type: 3}
-  _outlineMode: 0
-  _outlineColor: {r: 0, g: 1, b: 1, a: 1}
+  _outlineMode: 1
+  _outlineColor: {r: 1, g: 1, b: 1, a: 1}
   _outlineWidth: 4
   _pulseWidth: 0
   _pulseSpeed: 2
@@ -112,6 +112,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37a0e5c2850547c418af8e10d597d31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractableOutline
+--- !u!114 &5608887536917728394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3014639310378341370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db684ea0998a4c84f87dd3c4fef58694, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlantingAreaVisual
+  plantingPoint: {fileID: 3099075977206210838}
 --- !u!1 &5276574785335880461
 GameObject:
   m_ObjectHideFlags: 0
@@ -1200,7 +1213,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2450
+  m_VersionIndex: 2462
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []

@@ -184,7 +184,7 @@ MonoBehaviour:
   _outlineMaskShader: {fileID: 4800000, guid: c2f5089722420f44ea03b3dbb08dca7e, type: 3}
   _outlineFillShader: {fileID: 4800000, guid: 6cdd088550bc7e6478ae291e0e83fabb, type: 3}
   _outlineMode: 1
-  _outlineColor: {r: 0, g: 1, b: 1, a: 1}
+  _outlineColor: {r: 1, g: 1, b: 1, a: 1}
   _outlineWidth: 4
   _pulseWidth: 0
   _pulseSpeed: 2
