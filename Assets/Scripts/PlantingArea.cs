@@ -4,17 +4,17 @@ using System.Collections;
 
 public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractable
 {
-    [Header("Planting")]
-    [SerializeField] private Transform plantingPoint;
-
+    private PlantingAreaVisual pAVisual;
     private SeedDataSO plantedSeedData;
     private SoilDataSO soilPlacedData;
-
     private PlantGrowthState currentState = PlantGrowthState.Empty;
-    private GameObject currentPlantVisual;
-    private GameObject currentSoilVisual;
+
     private float currentWater;
-    //private float growthTimer;
+
+    private void Awake()
+    {
+        pAVisual = GetComponent<PlantingAreaVisual>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -63,14 +63,7 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
 
         Destroy(soilBag.gameObject);
 
-        if (soilPlacedData.soilPrefab != null)
-        {
-            currentSoilVisual = Instantiate(
-                soilPlacedData.soilPrefab,
-                plantingPoint.position,
-                plantingPoint.rotation
-            );
-        }
+        pAVisual.UpdateSoilVisual(soilPlacedData);
     }
 
     private void PlantSeed(Seed seed)
@@ -81,7 +74,7 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
 
         Destroy(seed.gameObject);
 
-        UpdatePlantVisual();
+        pAVisual.UpdatePlantVisual(currentState, plantedSeedData, this);
 
         StartCoroutine(GrowPlant());
     }
@@ -143,53 +136,7 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
     private void ChangeState(PlantGrowthState newState)
     {
         currentState = newState;
-        UpdatePlantVisual();
-    }
-
-    private void UpdatePlantVisual()
-    {
-        if (currentPlantVisual != null)
-        {
-            Destroy(currentPlantVisual);
-        }
-
-        GameObject prefabToSpawn = null;
-
-        switch (currentState)
-        {
-            case PlantGrowthState.Seed:
-                prefabToSpawn = plantedSeedData.seedPrefab;
-                break;
-
-            case PlantGrowthState.Germinating:
-                prefabToSpawn = plantedSeedData.germinatingPrefab;
-                break;
-
-            case PlantGrowthState.Growing:
-                prefabToSpawn = plantedSeedData.growingPrefab;
-                break;
-
-            case PlantGrowthState.Ready:
-                prefabToSpawn = plantedSeedData.readyPrefab;
-                break;
-        }
-
-        if (prefabToSpawn != null)
-        {
-            currentPlantVisual = Instantiate(
-                prefabToSpawn,
-                plantingPoint.position,
-                plantingPoint.rotation
-            );
-
-            if (currentState == PlantGrowthState.Ready)
-            {
-                if (currentPlantVisual.TryGetComponent(out Sapling sapling))
-                {
-                    sapling.Setup(plantedSeedData, this);
-                }
-            }
-        }
+        pAVisual.UpdatePlantVisual(currentState, plantedSeedData, this);
     }
 
     private IEnumerator WaitForCorrectWater()
@@ -242,22 +189,16 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
     {
         StopAllCoroutines();
 
-        if (currentPlantVisual != null)
-        {
-            Destroy(currentPlantVisual);
-            currentPlantVisual = null;
-        }
+        pAVisual.DestroyPlant();
 
         plantedSeedData = null;
         currentWater = 0f;
         currentState = PlantGrowthState.Empty;
-
-        Debug.Log("A planta morreu.");
     }
 
     public void RemoveGrowPlant()
     {
-        currentPlantVisual = null;
+        pAVisual.RemovePlantVisual();
         plantedSeedData = null;
         currentState = PlantGrowthState.Empty;
 
@@ -281,21 +222,13 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
         StopAllCoroutines();
 
         // Remover planta, se existir
-        if (currentPlantVisual != null)
-        {
-            Destroy(currentPlantVisual);
-            currentPlantVisual = null;
-        }
+        pAVisual.DestroyPlant();
 
         plantedSeedData = null;
         currentState = PlantGrowthState.Empty;
 
         // Remover solo
-        if (currentSoilVisual != null)
-        {
-            Destroy(currentSoilVisual);
-            currentSoilVisual = null;
-        }
+        pAVisual.RemoveSoilVisual();
 
         soilPlacedData = null;
     }
