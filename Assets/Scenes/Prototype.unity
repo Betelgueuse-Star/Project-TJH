@@ -2607,7 +2607,7 @@ PrefabInstance:
       objectReference: {fileID: 948316556}
     - target: {fileID: 23419702326646044, guid: 76d45b9b813766645b758271e7ff2ab4, type: 3}
       propertyPath: m_VersionIndex
-      value: 2465
+      value: 2597
       objectReference: {fileID: 0}
     - target: {fileID: 3014639310378341370, guid: 76d45b9b813766645b758271e7ff2ab4, type: 3}
       propertyPath: m_Name
@@ -10543,6 +10543,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantingAreaVisual
   plantingPoint: {fileID: 34821913}
+  waterText: {fileID: 0}
+  growthStageText: {fileID: 0}
 --- !u!43 &1428060355
 Mesh:
   m_ObjectHideFlags: 0
@@ -15530,7 +15532,7 @@ PrefabInstance:
       objectReference: {fileID: 847088285}
     - target: {fileID: 23419702326646044, guid: 76d45b9b813766645b758271e7ff2ab4, type: 3}
       propertyPath: m_VersionIndex
-      value: 2465
+      value: 2597
       objectReference: {fileID: 0}
     - target: {fileID: 3014639310378341370, guid: 76d45b9b813766645b758271e7ff2ab4, type: 3}
       propertyPath: m_Name

@@ -1,21 +1,39 @@
-using UnityEngine;
-using System.Collections;
 
+using UnityEngine;
+using TMPro;
 
 public class PlantingAreaVisual : MonoBehaviour
 {
     [Header("Planting")]
     [SerializeField] private Transform plantingPoint;
+
+    [Header("Status UI")]
+    [SerializeField] private TMP_Text waterText;
+    [SerializeField] private TMP_Text growthStageText;
+
     private ParticleSystem currentFertilizerEffect;
     private GameObject currentPlantVisual;
     private GameObject currentSoilVisual;
-    
+
+    public void UpdateWaterText(float currentWater)
+    {
+        if (waterText == null) return;
+
+        waterText.text = $"Água: {currentWater:0.##}";
+    }
+
+    public void UpdateGrowthStageText(PlantGrowthState currentState)
+    {
+        if (growthStageText == null) return;
+
+        growthStageText.text = $"Estágio: {currentState}";
+    }
+
     public void UpdateSoilVisual(SoilDataSO soilData)
     {
         if (currentSoilVisual != null)
-        {
             Destroy(currentSoilVisual);
-        }
+
         if (soilData != null && soilData.soilPrefab != null)
         {
             currentSoilVisual = Instantiate(
@@ -26,32 +44,36 @@ public class PlantingAreaVisual : MonoBehaviour
         }
     }
 
-    public void UpdatePlantVisual(PlantGrowthState currentState, SeedDataSO plantedSeedData, PlantingArea plantingArea)
+    public void UpdatePlantVisual(
+        PlantGrowthState currentState,
+        SeedDataSO plantedSeedData,
+        PlantingArea plantingArea)
     {
         if (currentPlantVisual != null)
-        {
             Destroy(currentPlantVisual);
-        }
 
         GameObject prefabToSpawn = null;
 
-        switch (currentState)
+        if (plantedSeedData != null)
         {
-            case PlantGrowthState.Seed:
-                prefabToSpawn = plantedSeedData.seedPrefab;
-                break;
+            switch (currentState)
+            {
+                case PlantGrowthState.Seed:
+                    prefabToSpawn = plantedSeedData.seedPrefab;
+                    break;
 
-            case PlantGrowthState.Germinating:
-                prefabToSpawn = plantedSeedData.germinatingPrefab;
-                break;
+                case PlantGrowthState.Germinating:
+                    prefabToSpawn = plantedSeedData.germinatingPrefab;
+                    break;
 
-            case PlantGrowthState.Growing:
-                prefabToSpawn = plantedSeedData.growingPrefab;
-                break;
+                case PlantGrowthState.Growing:
+                    prefabToSpawn = plantedSeedData.growingPrefab;
+                    break;
 
-            case PlantGrowthState.Ready:
-                prefabToSpawn = plantedSeedData.readyPrefab;
-                break;
+                case PlantGrowthState.Ready:
+                    prefabToSpawn = plantedSeedData.readyPrefab;
+                    break;
+            }
         }
 
         if (prefabToSpawn != null)
@@ -62,12 +84,10 @@ public class PlantingAreaVisual : MonoBehaviour
                 plantingPoint.rotation
             );
 
-            if (currentState == PlantGrowthState.Ready)
+            if (currentState == PlantGrowthState.Ready &&
+                currentPlantVisual.TryGetComponent(out Sapling sapling))
             {
-                if (currentPlantVisual.TryGetComponent(out Sapling sapling))
-                {
-                    sapling.Setup(plantedSeedData, plantingArea);
-                }
+                sapling.Setup(plantedSeedData, plantingArea);
             }
         }
     }
@@ -84,9 +104,7 @@ public class PlantingAreaVisual : MonoBehaviour
     public void RemovePlantVisual()
     {
         if (currentPlantVisual != null)
-        {
             currentPlantVisual = null;
-        }
     }
 
     public void RemoveSoilVisual()
@@ -100,8 +118,9 @@ public class PlantingAreaVisual : MonoBehaviour
 
     public void PlayFertilizerEffect(FertilizerDataSO fertilizerData)
     {
-        if (fertilizerData == null) return;
-        if (fertilizerData.fertilizerParticle == null) return;
+        if (fertilizerData == null ||
+            fertilizerData.fertilizerParticle == null)
+            return;
 
         DestroyFertilizerEffect();
 

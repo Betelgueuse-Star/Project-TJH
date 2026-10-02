@@ -15,6 +15,9 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
     private void Awake()
     {
         pAVisual = GetComponent<PlantingAreaVisual>();
+
+        pAVisual.UpdateWaterText(currentWater);
+        pAVisual.UpdateGrowthStageText(currentState);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -125,7 +128,7 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
             yield break;
 
         ChangeState(PlantGrowthState.Germinating);
-        currentWater = 0f;
+        ResetPlantWater();
 
 
         // Germinating
@@ -137,7 +140,7 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
             yield break;
 
         ChangeState(PlantGrowthState.Growing);
-        currentWater = 0f;
+        ResetPlantWater();
 
 
         // Growing
@@ -149,7 +152,7 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
             yield break;
 
         ChangeState(PlantGrowthState.Ready);
-        currentWater = 0f;
+        ResetPlantWater();
     }
 
 
@@ -186,7 +189,14 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
     private void ChangeState(PlantGrowthState newState)
     {
         currentState = newState;
-        pAVisual.UpdatePlantVisual(currentState, plantedSeedData, this);
+
+        pAVisual.UpdatePlantVisual(
+            currentState,
+            plantedSeedData,
+            this
+        );
+
+        pAVisual.UpdateGrowthStageText(currentState);
     }
 
     private IEnumerator WaitForCorrectWater()
@@ -240,11 +250,20 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
         StopAllCoroutines();
 
         pAVisual.DestroyPlant();
+        pAVisual.DestroyFertilizerEffect();
 
         fertilizerPlacedData = null;
         plantedSeedData = null;
-        currentWater = 0f;
         currentState = PlantGrowthState.Empty;
+
+        ResetPlantWater();
+        pAVisual.UpdateGrowthStageText(currentState);
+    }
+
+    private void ResetPlantWater()
+    {
+        currentWater = 0f;
+        pAVisual.UpdateWaterText(currentWater);
     }
 
     public void RemoveGrowPlant()
@@ -279,9 +298,11 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
         plantedSeedData = null;
         currentState = PlantGrowthState.Empty;
 
-        // Remover solo
+        // Remover visual, e atualizar textos
         pAVisual.RemoveSoilVisual();
         pAVisual.DestroyFertilizerEffect();
+        ResetPlantWater();
+        pAVisual.UpdateGrowthStageText(currentState);
 
         soilPlacedData = null;
         fertilizerPlacedData = null;
@@ -335,10 +356,11 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
         }
     }
 
-
     public void AddPlantWater(WateringCan wateringCan)
     {
         currentWater += wateringCan.GetAndRemoveWater(wateringCan.WaterAmount);
+
+        pAVisual.UpdateWaterText(currentWater);
         Debug.Log($"Água adicionada à planta. Água atual: {currentWater}");
     }
 }

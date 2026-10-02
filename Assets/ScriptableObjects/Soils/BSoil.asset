@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: BSoil
   m_EditorClassIdentifier: Assembly-CSharp::SoilDataSO
   soilName: BSoil
-  growthMultiplier: 10
+  growthMultiplier: 2
   maxUses: 3
   soilPrefab: {fileID: 6208110011841838250, guid: b8fe2f13658770c49865cdf46d92bbee, type: 3}
