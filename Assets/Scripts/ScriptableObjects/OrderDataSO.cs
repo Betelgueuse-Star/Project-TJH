@@ -9,6 +9,11 @@ public class OrderDataSO : ScriptableObject
     [Min(1)]
     [SerializeField] private int requestedAmount = 1;
 
+    [Header("Recompensa")]
+    [SerializeField] private int rewardAmount = 10;
+
+
     public ItemTypeSO RequestedItem => requestedItem;
     public int RequestedAmount => requestedAmount;
+    public int RewardAmount => rewardAmount;
 }

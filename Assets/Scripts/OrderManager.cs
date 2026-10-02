@@ -7,22 +7,21 @@ public class OrderManager : MonoBehaviour
     [Header("Pedidos disponíveis")]
     [SerializeField] private OrderDataSO[] availableOrders;
 
+    [Header("Currency")]
+    [SerializeField] private CurrencyManager currencyManager;
+
     private OrderDataSO currentOrder;
-
     private int deliveredAmount;
-
 
     private void Awake()
     {
         Instance = this;
     }
 
-
     private void Start()
     {
         StartNewOrder();
     }
-
 
     public void StartNewOrder()
     {
@@ -45,7 +44,6 @@ public class OrderManager : MonoBehaviour
             currentOrder.RequestedItem.name
         );
     }
-
 
     public bool TryDeliver(IDeliverable deliverable, GameObject deliveredObject)
     {
@@ -78,10 +76,11 @@ public class OrderManager : MonoBehaviour
         return true;
     }
 
-
     private void CompleteOrder()
     {
         Debug.Log("PEDIDO COMPLETO!");
+
+        currencyManager.AddCurrency(currentOrder.RewardAmount);
 
         StartNewOrder();
     }
