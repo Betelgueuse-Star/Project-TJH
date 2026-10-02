@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OrderDataSO
   requestedItem: {fileID: 11400000, guid: f111c341dab6058478a3cc7913f5a2b2, type: 2}
   requestedAmount: 2
+  rewardAmount: 15
