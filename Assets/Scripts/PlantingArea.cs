@@ -7,6 +7,7 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
     private PlantingAreaVisual pAVisual;
     private SeedDataSO plantedSeedData;
     private SoilDataSO soilPlacedData;
+    private FertilizerDataSO fertilizerPlacedData;
     private PlantGrowthState currentState = PlantGrowthState.Empty;
 
     private float currentWater;
@@ -34,6 +35,12 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
             TryPlaceSoil(soilBag);
             return;
         }
+
+        if (other.TryGetComponent(out Fertilizer fertilizer))
+        {
+            TryPlaceFertilizer(fertilizer);
+            return;
+        }
     }
 
     private void TryPlaceSoil(SoilBag soilBag)
@@ -57,6 +64,21 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
         PlantSeed(seed);
     }
 
+    private void TryPlaceFertilizer(Fertilizer fertilizer)
+    {
+        if (soilPlacedData == null) return;
+        if (currentState != PlantGrowthState.Empty) return;
+        if (fertilizerPlacedData != null) return;
+
+        if (!fertilizer.TryGetComponent(out ObjectGrabbable grabbable))
+            return;
+
+        if (grabbable.IsBeingHeld) return;
+        if (fertilizer.FertilizerData == null) return;
+
+        PlaceFertilizer(fertilizer);
+    }
+
     private void PlaceSoil(SoilBag soilBag)
     {
         soilPlacedData = soilBag.SoilData;
@@ -69,19 +91,29 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
     private void PlantSeed(Seed seed)
     {
         plantedSeedData = seed.SeedData;
-
         currentState = PlantGrowthState.Seed;
+
+        float totalGrowthTime = CalculateGrowthTime();
 
         Destroy(seed.gameObject);
 
         pAVisual.UpdatePlantVisual(currentState, plantedSeedData, this);
 
-        StartCoroutine(GrowPlant());
+        StartCoroutine(GrowPlant(totalGrowthTime));
     }
 
-    private IEnumerator GrowPlant()
+
+    private void PlaceFertilizer(Fertilizer fertilizer)
     {
-        float totalGrowthTime = CalculateGrowthTime();
+        fertilizerPlacedData = fertilizer.FertilizerData;
+
+        Destroy(fertilizer.gameObject);
+
+        pAVisual.PlayFertilizerEffect(fertilizerPlacedData);
+    }   
+
+    private IEnumerator GrowPlant(float totalGrowthTime)
+    {
         float stageTime = totalGrowthTime / 3f;
 
         // Seed
@@ -120,17 +152,35 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
         currentWater = 0f;
     }
 
+
     private float CalculateGrowthTime()
     {
-        float multiplier = 1f;
+        float soilMultiplier = 1f;
+        float fertilizerMultiplier = 1f;
 
-        // Check if soilPlacedData is not null and matches the recommended soil for the planted seed
-        if (soilPlacedData != null && soilPlacedData == plantedSeedData.recommendedSoil) {
-
-            multiplier = soilPlacedData.growthMultiplier;
+        if (soilPlacedData != null &&
+            soilPlacedData == plantedSeedData.recommendedSoil)
+        {
+            soilMultiplier = Mathf.Max(1f, soilPlacedData.growthMultiplier);
         }
 
-        return plantedSeedData.baseGrowthTime / multiplier;
+        if (fertilizerPlacedData != null)
+        {
+            fertilizerMultiplier = Mathf.Max(1f, fertilizerPlacedData.growthMultiplier);
+        }
+
+        float multiplier = soilMultiplier * fertilizerMultiplier;
+        float totalTime = plantedSeedData.baseGrowthTime / multiplier;
+
+        Debug.Log(
+            $"[Growth] Base: {plantedSeedData.baseGrowthTime}s | " +
+            $"Soil: {soilMultiplier}x | " +
+            $"Fertilizer: {fertilizerMultiplier}x | " +
+            $"Final: {totalTime}s | " +
+            $"Per stage: {totalTime / 3f}s"
+        );
+
+        return totalTime;
     }
 
     private void ChangeState(PlantGrowthState newState)
@@ -191,6 +241,7 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
 
         pAVisual.DestroyPlant();
 
+        fertilizerPlacedData = null;
         plantedSeedData = null;
         currentWater = 0f;
         currentState = PlantGrowthState.Empty;
@@ -224,13 +275,16 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
         // Remover planta, se existir
         pAVisual.DestroyPlant();
 
+
         plantedSeedData = null;
         currentState = PlantGrowthState.Empty;
 
         // Remover solo
         pAVisual.RemoveSoilVisual();
+        pAVisual.DestroyFertilizerEffect();
 
         soilPlacedData = null;
+        fertilizerPlacedData = null;
     }
 
     //segura um regador/2 ou pá/1 

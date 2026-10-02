@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: OakSoil
   m_EditorClassIdentifier: Assembly-CSharp::SoilDataSO
   soilName: OakSoil
-  growthMultiplier: 10
+  growthMultiplier: 2
   maxUses: 3
   soilPrefab: {fileID: 6208110011841838250, guid: 5b8dc15eb755b0b4ca4515a1fd5635d9, type: 3}

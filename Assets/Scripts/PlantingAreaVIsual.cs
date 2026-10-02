@@ -6,6 +6,7 @@ public class PlantingAreaVisual : MonoBehaviour
 {
     [Header("Planting")]
     [SerializeField] private Transform plantingPoint;
+    private ParticleSystem currentFertilizerEffect;
     private GameObject currentPlantVisual;
     private GameObject currentSoilVisual;
     
@@ -94,6 +95,31 @@ public class PlantingAreaVisual : MonoBehaviour
         {
             Destroy(currentSoilVisual);
             currentSoilVisual = null;
+        }
+    }
+
+    public void PlayFertilizerEffect(FertilizerDataSO fertilizerData)
+    {
+        if (fertilizerData == null) return;
+        if (fertilizerData.fertilizerParticle == null) return;
+
+        DestroyFertilizerEffect();
+
+        currentFertilizerEffect = Instantiate(
+            fertilizerData.fertilizerParticle,
+            plantingPoint.position,
+            plantingPoint.rotation
+        );
+
+        currentFertilizerEffect.Play();
+    }
+
+    public void DestroyFertilizerEffect()
+    {
+        if (currentFertilizerEffect != null)
+        {
+            Destroy(currentFertilizerEffect.gameObject);
+            currentFertilizerEffect = null;
         }
     }
 }
