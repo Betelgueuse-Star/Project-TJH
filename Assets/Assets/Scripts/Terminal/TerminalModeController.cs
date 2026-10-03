@@ -4,7 +4,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ComputerModeController : MonoBehaviour
+public class TerminalModeController : MonoBehaviour
 {
     [Header("Player")]
     [SerializeField] private FirstPersonController playerController;
@@ -14,7 +14,7 @@ public class ComputerModeController : MonoBehaviour
     [SerializeField] private CinemachineCamera playerCamera;
     [SerializeField] private CinemachineCamera computerCamera;
 
-    private bool isInComputerMode;
+    private bool isInTerminalMode;
 
     private int playerCameraPriority;
     private int computerCameraPriority;
@@ -22,7 +22,7 @@ public class ComputerModeController : MonoBehaviour
     private CursorLockMode previousCursorLockState;
     private bool previousCursorVisibility;
 
-    public bool IsInComputerMode => isInComputerMode;
+    public bool IsInTerminalMode => isInTerminalMode;
 
     private void Awake()
     {
@@ -32,21 +32,20 @@ public class ComputerModeController : MonoBehaviour
     public void OnInteract(InputValue value)
     {
 
-       EnterComputerMode();
+       EnterTerminalMode();
     }
 
     public void OnDrop(InputValue value)
     {
-
-        ExitComputerMode();
+        ExitTerminalMode();
     }
 
-    public void EnterComputerMode()
+    public void EnterTerminalMode()
     {
-        if (isInComputerMode)
+        if (isInTerminalMode)
             return;
 
-        isInComputerMode = true;
+        isInTerminalMode = true;
 
         previousCursorLockState = Cursor.lockState;
         previousCursorVisibility = Cursor.visible;
@@ -61,12 +60,12 @@ public class ComputerModeController : MonoBehaviour
         Debug.Log("Entered computer mode.");
     }
 
-    public void ExitComputerMode()
+    public void ExitTerminalMode()
     {
-        if (!isInComputerMode)
+        if (!isInTerminalMode)
             return;
 
-        isInComputerMode = false;
+        isInTerminalMode = false;
 
         computerCamera.Priority = computerCameraPriority;
 

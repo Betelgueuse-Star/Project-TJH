@@ -6,7 +6,7 @@ public class ComputerButton : MonoBehaviour
 {
     [SerializeField] private UnityEvent onClick;
 
-    public void Click()
+    public void Click() 
     {
         onClick?.Invoke();
     }

@@ -5,6 +5,7 @@ public class ItemStorage : MonoBehaviour, IInteractable
 {
     [Header("Item")]
     [SerializeField] private ItemTypeSO startingItemType;
+    [SerializeField] private TextMeshProUGUI nameText;
 
     [Header("Storage")]
     [SerializeField] private TextMeshProUGUI amountText;
@@ -31,7 +32,7 @@ public class ItemStorage : MonoBehaviour, IInteractable
         {
             currentAmount = 0;
         }
-        UpdateAmountText();
+        UpdateText();
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -53,14 +54,15 @@ public class ItemStorage : MonoBehaviour, IInteractable
 
         currentAmount++;
 
-        UpdateAmountText();
+        UpdateText();
 
         Destroy(other.gameObject);
     }
 
-    private void UpdateAmountText()
+    private void UpdateText()
     {
         amountText.text = currentAmount.ToString();
+        nameText.text = storedItemType != null ? storedItemType.ItemName : "Vazio";
     }
     public void Interact(Player player)
     {

@@ -1,7 +1,9 @@
+using TMPro;
 using UnityEngine;
 
 public class WaterTank : MonoBehaviour, IInteractable, IConditionalInteractable
 {
+    [SerializeField] private TextMeshProUGUI waterAmountText;
     [SerializeField] private float maxWater = 100f;
 
     [SerializeField] private float currentWater;
@@ -9,6 +11,7 @@ public class WaterTank : MonoBehaviour, IInteractable, IConditionalInteractable
     private void Awake()
     {
         currentWater = maxWater;
+        waterAmountText.text = currentWater.ToString();
     }
 
     public float TakeWater(float amount)
@@ -16,6 +19,7 @@ public class WaterTank : MonoBehaviour, IInteractable, IConditionalInteractable
         float waterTaken = Mathf.Min(amount, currentWater);
 
         currentWater -= waterTaken;
+        waterAmountText.text = currentWater.ToString();
 
         return waterTaken;
     }

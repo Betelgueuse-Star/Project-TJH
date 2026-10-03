@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: OakSeedIT
   m_EditorClassIdentifier: Assembly-CSharp::ItemTypeSO
   itemPrefab: {fileID: 6208110011841838250, guid: 500cfd39e86923b4bac29c10595af49c, type: 3}
+  itemName: OakSeed

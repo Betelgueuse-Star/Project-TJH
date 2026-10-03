@@ -4,13 +4,13 @@ using UnityEngine.InputSystem;
 
 public class ComputerMouseInput : MonoBehaviour
 {
-    [SerializeField] private ComputerModeController computerMode;
+    [SerializeField] private TerminalModeController terminalMode;
     [SerializeField] private Camera playerCamera;
     [SerializeField] private float maxDistance = 5f;
 
     private void Update()
     {
-        if (!computerMode.IsInComputerMode)
+        if (!terminalMode.IsInTerminalMode)
             return;
 
         if (Mouse.current == null ||
