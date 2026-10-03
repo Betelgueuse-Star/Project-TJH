@@ -13,7 +13,7 @@ TagManager:
   - Water
   - UI
   - Player
-  - 
+  - ComputerUI
   - 
   - 
   - 
@@ -41,6 +41,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: ComputerUI
+    uniqueID: 1213969871
     locked: 0
   m_RenderingLayers:
   - Default

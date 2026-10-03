@@ -59,9 +59,10 @@ namespace StarterAssets
 		private float _rotationVelocity;
 		private float _verticalVelocity;
 		private float _terminalVelocity = 53.0f;
+        private bool controlsEnabled = true;
 
-		// timeout deltatime
-		private float _jumpTimeoutDelta;
+        // timeout deltatime
+        private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
 
 	
@@ -112,17 +113,22 @@ namespace StarterAssets
 
 		private void Update()
 		{
-			JumpAndGravity();
+            if (!controlsEnabled)
+                return;
+
+            JumpAndGravity();
 			GroundedCheck();
 			Move();
 		}
 
-		private void LateUpdate()
-		{
-			CameraRotation();
-		}
+        private void LateUpdate()
+        {
+            if (!controlsEnabled)
+                return;
 
-		private void GroundedCheck()
+            CameraRotation();
+        }
+        private void GroundedCheck()
 		{
 			// set sphere position, with offset
 			Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
@@ -264,5 +270,23 @@ namespace StarterAssets
 			// when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
 			Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
 		}
-	}
+        public void SetControlsEnabled(bool enabled)
+        {
+            controlsEnabled = enabled;
+
+            _input.move = Vector2.zero;
+            _input.look = Vector2.zero;
+            _input.jump = false;
+            _input.sprint = false;
+
+            _speed = 0f;
+            _rotationVelocity = 0f;
+
+            if (enabled)
+            {
+                _verticalVelocity = -2f;
+            }
+        }
+    }
+
 }

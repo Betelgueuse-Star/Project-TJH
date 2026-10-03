@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform toolHoldPointTransform;
     [SerializeField] private LayerMask interactionLayerMask;
     [SerializeField] private float interactionRange = 3f;
+    [SerializeField] private ComputerModeController computerModeController;
 
     private GameObject currentTool;
     private GameObject currentToolWorldPrefab;
@@ -114,7 +115,7 @@ public class Player : MonoBehaviour
 
     public void OnInteract(InputValue value)
     {
-
+        computerModeController.EnterComputerMode();
         //se nao acertar nada, return
         if (!Physics.Raycast(playerCameraGameObject.transform.position, playerCameraGameObject.transform.forward, out RaycastHit raycastHitInfo, interactionRange, interactionLayerMask))
         {
@@ -140,6 +141,7 @@ public class Player : MonoBehaviour
 
     public void OnDrop(InputValue value)
     {
+        computerModeController.ExitComputerMode();
         if (!value.isPressed)
             return;
 
