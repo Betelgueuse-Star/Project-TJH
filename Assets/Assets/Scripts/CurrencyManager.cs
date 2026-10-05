@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class CurrencyManager : MonoBehaviour
 {
+    [SerializeField] TerminalUI terminalUI;
     private int currentCurrency = 0;
 
     public int CurrentCurrency => currentCurrency;
@@ -13,6 +14,7 @@ public class CurrencyManager : MonoBehaviour
             return;
 
         currentCurrency += amount;
+        terminalUI.UpdateCurrencyText(currentCurrency);
     }
 
     public bool TrySpendCurrency(int amount)
@@ -21,6 +23,7 @@ public class CurrencyManager : MonoBehaviour
             return false;
 
         currentCurrency -= amount;
+        terminalUI.UpdateCurrencyText(currentCurrency);
 
         return true;
     }

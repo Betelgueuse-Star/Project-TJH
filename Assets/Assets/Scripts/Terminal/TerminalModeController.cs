@@ -7,16 +7,16 @@ public class TerminalModeController : MonoBehaviour
 {
     [Header("Player")]
     [SerializeField] private FirstPersonController playerController;
-    
 
     [Header("Cameras")]
     [SerializeField] private CinemachineCamera playerCamera;
-    [SerializeField] private CinemachineCamera computerCamera;
+
+    [Header("Navigation")]
+    [SerializeField] private TerminalNavigationController navigationController;
 
     private bool isInTerminalMode;
 
     private int playerCameraPriority;
-    private int computerCameraPriority;
 
     private CursorLockMode previousCursorLockState;
     private bool previousCursorVisibility;
@@ -26,7 +26,6 @@ public class TerminalModeController : MonoBehaviour
     private void Awake()
     {
         playerCameraPriority = playerCamera.Priority.Value;
-        computerCameraPriority = computerCamera.Priority.Value;
     }
 
     public void EnterTerminalMode()
@@ -41,7 +40,7 @@ public class TerminalModeController : MonoBehaviour
 
         playerController.SetControlsEnabled(false);
 
-        computerCamera.Priority = playerCameraPriority + 1;
+        navigationController.EnterNavigation();
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -54,7 +53,7 @@ public class TerminalModeController : MonoBehaviour
 
         isInTerminalMode = false;
 
-        computerCamera.Priority = computerCameraPriority;
+        navigationController.ExitNavigation();
 
         playerController.SetControlsEnabled(true);
 
