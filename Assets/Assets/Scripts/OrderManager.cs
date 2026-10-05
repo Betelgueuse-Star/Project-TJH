@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public class OrderManager : MonoBehaviour
 {
@@ -8,6 +9,9 @@ public class OrderManager : MonoBehaviour
         public int RequiredAmount;
         public int DeliveredAmount;
     }
+
+    public event Action OnOrderChanged;
+    public event Action OnOrderProgressChanged;
 
     public static OrderManager Instance { get; private set; }
 
@@ -19,7 +23,8 @@ public class OrderManager : MonoBehaviour
 
     private OrderDataSO currentOrder;
     private RequirementProgress[] requirementProgress;
-    private int deliveredAmount;
+
+    public OrderDataSO CurrentOrder => currentOrder;
 
     private void Awake()
     {
@@ -39,7 +44,7 @@ public class OrderManager : MonoBehaviour
             return;
         }
 
-        int randomIndex = Random.Range(0, availableOrders.Length);
+        int randomIndex = UnityEngine.Random.Range(0, availableOrders.Length);
 
         currentOrder = availableOrders[randomIndex];
 
@@ -57,18 +62,7 @@ public class OrderManager : MonoBehaviour
             };
         }
 
-        Debug.Log("Novo pedido iniciado.");
-
-        foreach (RequirementProgress progress in requirementProgress)
-        {
-            Debug.Log(
-                progress.DeliveredAmount +
-                "/" +
-                progress.RequiredAmount +
-                " " +
-                progress.Item.ItemName
-            );
-        }
+        OnOrderChanged?.Invoke();
     }
 
     public bool TryDeliver(IDeliverable deliverable, GameObject deliveredObject)
@@ -101,15 +95,6 @@ public class OrderManager : MonoBehaviour
 
         matchingRequirement.DeliveredAmount++;
 
-        Debug.Log(
-            "Entrega: " +
-            matchingRequirement.DeliveredAmount +
-            "/" +
-            matchingRequirement.RequiredAmount +
-            " " +
-            matchingRequirement.Item.ItemName
-        );
-
         Destroy(deliveredObject);
 
         if (IsOrderComplete())
@@ -134,9 +119,20 @@ public class OrderManager : MonoBehaviour
     private void CompleteOrder()
     {
         Debug.Log("PEDIDO COMPLETO!");
+        OnOrderProgressChanged?.Invoke();
 
         currencyManager.AddCurrency(currentOrder.RewardAmount);
 
         StartNewOrder();
+    }
+    public int GetDeliveredAmount(ItemTypeSO item)
+    {
+        foreach (RequirementProgress progress in requirementProgress)
+        {
+            if (progress.Item == item)
+                return progress.DeliveredAmount;
+        }
+
+        return 0;
     }
 }

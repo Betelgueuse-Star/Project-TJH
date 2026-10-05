@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class TerminalUI : MonoBehaviour
+public class TerminalShopUI : MonoBehaviour
 {
     [SerializeField] private CurrencyManager currencyManager;
     [SerializeField] private TextMeshProUGUI currencyText;
