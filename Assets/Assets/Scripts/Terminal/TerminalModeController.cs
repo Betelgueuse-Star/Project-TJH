@@ -2,7 +2,6 @@
 using StarterAssets;
 using Unity.Cinemachine;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class TerminalModeController : MonoBehaviour
 {
@@ -29,16 +28,6 @@ public class TerminalModeController : MonoBehaviour
         playerCameraPriority = playerCamera.Priority.Value;
         computerCameraPriority = computerCamera.Priority.Value;
     }
-    public void OnInteract(InputValue value)
-    {
-
-       EnterTerminalMode();
-    }
-
-    public void OnDrop(InputValue value)
-    {
-        ExitTerminalMode();
-    }
 
     public void EnterTerminalMode()
     {
@@ -56,8 +45,6 @@ public class TerminalModeController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-
-        Debug.Log("Entered computer mode.");
     }
 
     public void ExitTerminalMode()

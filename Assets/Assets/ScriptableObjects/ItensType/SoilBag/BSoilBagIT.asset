@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemTypeSO
   itemPrefab: {fileID: 6208110011841838250, guid: 62c23304ce25f774db2fcc72bf899f81, type: 3}
   itemName: BSoil
+  itemPrice: 5

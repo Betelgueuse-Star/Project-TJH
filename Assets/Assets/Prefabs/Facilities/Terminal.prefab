@@ -319,6 +319,37 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &1607071546229155545
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1760857887678960581}
+  m_Layer: 0
+  m_Name: ItemSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1760857887678960581
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607071546229155545}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.61, y: 1.47, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5662484719526017763}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1757452660901535237
 GameObject:
   m_ObjectHideFlags: 0
@@ -937,6 +968,7 @@ Transform:
   - {fileID: 5197766374191814561}
   - {fileID: 6691367004217661245}
   - {fileID: 9209781511569428392}
+  - {fileID: 1760857887678960581}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &4993477280190311820
@@ -972,7 +1004,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 841a93555c1a584439991c8960db6580, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Computer
-  terminalModeController: {fileID: 0}
+  terminalModeController: {fileID: 198747231999767407}
+  currencyManager: {fileID: 0}
+  itemSpawnPoint: {fileID: 1760857887678960581}
 --- !u!114 &8370467866715502923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -985,8 +1019,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 462babb237fe5a24a91a0c71c343f3ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ComputerMouseInput
-  terminalMode: {fileID: 0}
+  terminalMode: {fileID: 198747231999767407}
   playerCamera: {fileID: 0}
+  colliderbuttonMask:
+    serializedVersion: 2
+    m_Bits: 256
   maxDistance: 5
 --- !u!114 &6669886138560913229
 MonoBehaviour:
@@ -1651,6 +1688,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8269676058918198309}
   - component: {fileID: 675063470810711452}
+  - component: {fileID: 4822057494755974691}
   - component: {fileID: 3834129508846626607}
   m_Layer: 0
   m_Name: BuySeedColider
@@ -1695,6 +1733,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.24, y: 0.54, z: 0.73}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4822057494755974691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6277801741174847937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d018250dcd3d5c4181d5081d3c49b7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShopItemButton
+  terminal: {fileID: 3336330988439478427}
+  item: {fileID: 11400000, guid: b127ea847b31fad4f9da06c913f27271, type: 2}
 --- !u!114 &3834129508846626607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1710,9 +1762,9 @@ MonoBehaviour:
   onClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Computer, Assembly-CSharp
-        m_MethodName: BuySeed
+      - m_Target: {fileID: 4822057494755974691}
+        m_TargetAssemblyTypeName: ShopItemButton, Assembly-CSharp
+        m_MethodName: Buy
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

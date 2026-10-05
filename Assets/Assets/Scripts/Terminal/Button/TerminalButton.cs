@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ComputerButton : MonoBehaviour
+public class TerminalButton : MonoBehaviour
 {
     [SerializeField] private UnityEvent onClick;
 

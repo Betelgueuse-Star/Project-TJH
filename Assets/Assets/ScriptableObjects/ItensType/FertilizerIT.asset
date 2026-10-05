@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemTypeSO
   itemPrefab: {fileID: 7423770118163320945, guid: ee720d7aa3d78664fb0a4b55ae91dea4, type: 3}
   itemName: Fertilizer
+  itemPrice: 4

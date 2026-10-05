@@ -2,10 +2,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ComputerMouseInput : MonoBehaviour
+public class TerminalMouseInput : MonoBehaviour
 {
     [SerializeField] private TerminalModeController terminalMode;
     [SerializeField] private Camera playerCamera;
+    [SerializeField] private LayerMask colliderbuttonMask;
     [SerializeField] private float maxDistance = 5f;
 
     private void Update()
@@ -21,10 +22,10 @@ public class ComputerMouseInput : MonoBehaviour
             Mouse.current.position.ReadValue()
         );
 
-        if (Physics.Raycast(ray, out RaycastHit hit, maxDistance))
+        if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, colliderbuttonMask))
         {
-            ComputerButton button =
-                hit.collider.GetComponent<ComputerButton>();
+            TerminalButton button =
+                hit.collider.GetComponent < TerminalButton>();
 
             if (button != null)
                 button.Click();

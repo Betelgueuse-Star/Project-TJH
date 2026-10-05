@@ -13,8 +13,6 @@ public class CurrencyManager : MonoBehaviour
             return;
 
         currentCurrency += amount;
-
-        Debug.Log($"Currency added: {amount}. Current currency: {currentCurrency}");
     }
 
     public bool TrySpendCurrency(int amount)
@@ -23,8 +21,6 @@ public class CurrencyManager : MonoBehaviour
             return false;
 
         currentCurrency -= amount;
-
-        Debug.Log($"Currency spent: {amount}. Current currency: {currentCurrency}");
 
         return true;
     }
