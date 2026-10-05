@@ -2,6 +2,13 @@ using UnityEngine;
 
 public class OrderManager : MonoBehaviour
 {
+    private class RequirementProgress
+    {
+        public ItemTypeSO Item;
+        public int RequiredAmount;
+        public int DeliveredAmount;
+    }
+
     public static OrderManager Instance { get; private set; }
 
     [Header("Pedidos disponíveis")]
@@ -11,6 +18,7 @@ public class OrderManager : MonoBehaviour
     [SerializeField] private CurrencyManager currencyManager;
 
     private OrderDataSO currentOrder;
+    private RequirementProgress[] requirementProgress;
     private int deliveredAmount;
 
     private void Awake()
@@ -35,14 +43,32 @@ public class OrderManager : MonoBehaviour
 
         currentOrder = availableOrders[randomIndex];
 
-        deliveredAmount = 0;
+        requirementProgress = new RequirementProgress[currentOrder.Requirements.Length];
 
-        Debug.Log(
-            "Novo pedido: " +
-            currentOrder.RequestedAmount +
-            "x " +
-            currentOrder.RequestedItem.name
-        );
+        for (int i = 0; i < currentOrder.Requirements.Length; i++)
+        {
+            OrderRequirement requirement = currentOrder.Requirements[i];
+
+            requirementProgress[i] = new RequirementProgress
+            {
+                Item = requirement.Item,
+                RequiredAmount = requirement.Amount,
+                DeliveredAmount = 0
+            };
+        }
+
+        Debug.Log("Novo pedido iniciado.");
+
+        foreach (RequirementProgress progress in requirementProgress)
+        {
+            Debug.Log(
+                progress.DeliveredAmount +
+                "/" +
+                progress.RequiredAmount +
+                " " +
+                progress.Item.ItemName
+            );
+        }
     }
 
     public bool TryDeliver(IDeliverable deliverable, GameObject deliveredObject)
@@ -50,27 +76,56 @@ public class OrderManager : MonoBehaviour
         if (currentOrder == null)
             return false;
 
-        if (deliverable.ItemType != currentOrder.RequestedItem)
+        RequirementProgress matchingRequirement = null;
+
+        foreach (RequirementProgress progress in requirementProgress)
+        {
+            if (progress.Item == deliverable.ItemType)
+            {
+                matchingRequirement = progress;
+                break;
+            }
+        }
+
+        if (matchingRequirement == null)
         {
             Debug.Log("Este item não pertence ao pedido atual.");
-
             return false;
         }
 
-        deliveredAmount++;
+        if (matchingRequirement.DeliveredAmount >= matchingRequirement.RequiredAmount)
+        {
+            Debug.Log("A quantidade deste item já foi completada.");
+            return false;
+        }
+
+        matchingRequirement.DeliveredAmount++;
 
         Debug.Log(
             "Entrega: " +
-            deliveredAmount +
+            matchingRequirement.DeliveredAmount +
             "/" +
-            currentOrder.RequestedAmount
+            matchingRequirement.RequiredAmount +
+            " " +
+            matchingRequirement.Item.ItemName
         );
 
         Destroy(deliveredObject);
 
-        if (deliveredAmount >= currentOrder.RequestedAmount)
+        if (IsOrderComplete())
         {
             CompleteOrder();
+        }
+
+        return true;
+    }
+
+    private bool IsOrderComplete()
+    {
+        foreach (RequirementProgress progress in requirementProgress)
+        {
+            if (progress.DeliveredAmount < progress.RequiredAmount)
+                return false;
         }
 
         return true;
