@@ -27,11 +27,15 @@ public class OrderManager : MonoBehaviour
     [Header("Currency")]
     [SerializeField] private CurrencyManager currencyManager;
 
+    private int activeOrderIndex;
     private List<ActiveOrder> activeOrders = new List<ActiveOrder>(); // Lista de pedidos ativos
 
     //current order é o indice 0 da lista de pedidos ativos
     public OrderDataSO CurrentOrder =>
-    activeOrders.Count > 0 ? activeOrders[0].Order : null;
+    activeOrders.Count > 0 ? activeOrders[activeOrderIndex].Order: null;
+
+    public int ActiveOrderIndex => activeOrderIndex;
+    public int ActiveOrderCount => activeOrders.Count;
 
     private void Awake()
     {
@@ -113,7 +117,7 @@ public class OrderManager : MonoBehaviour
         if (activeOrders.Count == 0)
             return false;
 
-        ActiveOrder activeOrder = activeOrders[0];
+        ActiveOrder activeOrder = activeOrders[activeOrderIndex];
 
         RequirementProgress matchingRequirement = null;
 
@@ -142,7 +146,7 @@ public class OrderManager : MonoBehaviour
 
         Destroy(deliveredObject);
 
-        OnOrderProgressChanged?.Invoke(); //atualiza a UI do pedido atual
+        OnOrderProgressChanged?.Invoke();
 
         if (IsOrderComplete())
         {
@@ -154,7 +158,7 @@ public class OrderManager : MonoBehaviour
 
     private bool IsOrderComplete()
     {
-        ActiveOrder activeOrder = activeOrders[0];
+        ActiveOrder activeOrder = activeOrders[activeOrderIndex];
 
         foreach (RequirementProgress progress in activeOrder.RequirementProgress)
         {
@@ -167,48 +171,61 @@ public class OrderManager : MonoBehaviour
 
     private void CompleteOrder()
     {
-        ActiveOrder completedOrder = activeOrders[0];
+        ActiveOrder completedOrder = activeOrders[activeOrderIndex];
 
         Debug.Log("PEDIDO COMPLETO!");
 
         currencyManager.AddCurrency(completedOrder.Order.RewardAmount);
 
-        activeOrders.RemoveAt(0);
+        activeOrders.RemoveAt(activeOrderIndex);
 
-        OnOrderChanged?.Invoke();
-    }
 
-    //troca o pedido atual com outro pedido ativo, caso o índice seja inválido, ele não fará nada
-    public void SwitchActiveOrder(int index)
-    {
-        if (index < 0 || index >= activeOrders.Count)
+        //corrigi o índice do pedido ativo caso o pedido atual seja removido, para evitar que o índice fique fora do intervalo da lista de pedidos ativos
+        if (activeOrders.Count == 0)
         {
-            Debug.LogWarning("Índice de pedido inválido.");
-            return;
+            activeOrderIndex = 0;
+        }
+        else if (activeOrderIndex >= activeOrders.Count)
+        {
+            activeOrderIndex = activeOrders.Count - 1;
         }
 
-        if (index == 0)
+        OnOrderChanged?.Invoke();
+    }
+
+    //troca o pedido atual com o proxmimo pedido ativo na lista de pedidos ativos, caso não haja pedidos ativos, ele não fará nada
+    public void SwitchActiveOrder()
+    {
+        if (activeOrders.Count == 0)
             return;
 
-        ActiveOrder selectedOrder = activeOrders[index];
+        activeOrderIndex++;
 
-        activeOrders.RemoveAt(index);
-        activeOrders.Insert(0, selectedOrder);
+        if (activeOrderIndex >= activeOrders.Count)//volta para o primeiro
+            activeOrderIndex = 0;
 
         OnOrderChanged?.Invoke();
     }
 
-    public int GetDeliveredAmount(ItemTypeSO item)
+    public int GetDeliveredAmount(int orderIndex, ItemTypeSO item)
     {
-        if (activeOrders.Count == 0)
+        if (orderIndex < 0 || orderIndex >= activeOrders.Count)
             return 0;
 
-        foreach (RequirementProgress progress in activeOrders[0].RequirementProgress)
+        foreach (RequirementProgress progress in activeOrders[orderIndex].RequirementProgress)
         {
             if (progress.Item == item)
                 return progress.DeliveredAmount;
         }
 
         return 0;
+    }
+
+    public OrderDataSO GetOrder(int index)
+    {
+        if (index < 0 || index >= activeOrders.Count)
+            return null;
+
+        return activeOrders[index].Order;
     }
 }

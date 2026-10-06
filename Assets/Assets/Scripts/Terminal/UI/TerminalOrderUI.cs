@@ -1,11 +1,10 @@
-using TMPro;
 using UnityEngine;
 
 public class TerminalOrderUI : MonoBehaviour
 {
-    [Header("Order")]
-    [SerializeField] private TMP_Text rewardText;
-    [SerializeField] private Transform requirementsContainer;
+    [Header("Orders")]
+    [SerializeField] private Transform ordersContainer;
+    [SerializeField] private GameObject orderPrefab;
     [SerializeField] private GameObject requirementPrefab;
 
     private void OnEnable()
@@ -21,27 +20,51 @@ public class TerminalOrderUI : MonoBehaviour
 
     public void Refresh()
     {
-        ClearRequirements();
+        ClearOrders();
 
-        OrderDataSO order = OrderManager.Instance.CurrentOrder;
+        int orderCount = OrderManager.Instance.ActiveOrderCount;
+
+        for (int i = 0; i < orderCount; i++)
+        {
+            CreateOrderUI(i);
+        }
+    }
+
+    private void CreateOrderUI(int orderIndex)
+    {
+        OrderDataSO order = OrderManager.Instance.GetOrder(orderIndex);
 
         if (order == null)
             return;
 
-        rewardText.text = $"Recompensa: ${order.RewardAmount}";
+        GameObject orderObject = Instantiate(
+            orderPrefab,
+            ordersContainer
+        );
+
+        OrderUI orderUI = orderObject.GetComponent<OrderUI>();
+
+        orderUI.ActiveIndicator.SetActive(
+            orderIndex == OrderManager.Instance.ActiveOrderIndex
+        );
+
+        orderUI.RewardText.text = $"Recompensa: ${order.RewardAmount}";
 
         foreach (OrderRequirement requirement in order.Requirements)
         {
             GameObject requirementObject = Instantiate(
                 requirementPrefab,
-                requirementsContainer
+                orderUI.RequirementsContainer
             );
 
             OrderRequirementUI requirementUI =
                 requirementObject.GetComponent<OrderRequirementUI>();
 
             int deliveredAmount =
-                OrderManager.Instance.GetDeliveredAmount(requirement.Item);
+                OrderManager.Instance.GetDeliveredAmount(
+                    orderIndex,
+                    requirement.Item
+                );
 
             requirementUI.Setup(
                 requirement.Item.ItemName,
@@ -51,11 +74,11 @@ public class TerminalOrderUI : MonoBehaviour
         }
     }
 
-    private void ClearRequirements()
+    private void ClearOrders()
     {
-        for (int i = requirementsContainer.childCount - 1; i >= 0; i--)
+        for (int i = ordersContainer.childCount - 1; i >= 0; i--)
         {
-            Destroy(requirementsContainer.GetChild(i).gameObject);
+            Destroy(ordersContainer.GetChild(i).gameObject);
         }
     }
 
