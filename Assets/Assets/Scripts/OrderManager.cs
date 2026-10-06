@@ -1,5 +1,6 @@
-using UnityEngine;
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class OrderManager : MonoBehaviour
 {
@@ -8,6 +9,11 @@ public class OrderManager : MonoBehaviour
         public ItemTypeSO Item;
         public int RequiredAmount;
         public int DeliveredAmount;
+    }
+    private class ActiveOrder //estrutura para armazenar o pedido ativo e o progresso dos requisitos
+    {
+        public OrderDataSO Order;
+        public RequirementProgress[] RequirementProgress;
     }
 
     public event Action OnOrderChanged;
@@ -21,10 +27,11 @@ public class OrderManager : MonoBehaviour
     [Header("Currency")]
     [SerializeField] private CurrencyManager currencyManager;
 
-    private OrderDataSO currentOrder;
-    private RequirementProgress[] requirementProgress;
+    private List<ActiveOrder> activeOrders = new List<ActiveOrder>(); // Lista de pedidos ativos
 
-    public OrderDataSO CurrentOrder => currentOrder;
+    //current order é o indice 0 da lista de pedidos ativos
+    public OrderDataSO CurrentOrder =>
+    activeOrders.Count > 0 ? activeOrders[0].Order : null;
 
     private void Awake()
     {
@@ -36,6 +43,8 @@ public class OrderManager : MonoBehaviour
         StartNewOrder();
     }
 
+    // Inicia um novo pedido aleatório a partir da lista de pedidos disponíveis, caso ja houver um pedido ativo, ele não será adicionado novamente
+    // e assim criando um novo pedido diferente, caso não haja mais pedidos disponíveis, ele não fará nada
     public void StartNewOrder()
     {
         if (availableOrders.Length == 0)
@@ -44,17 +53,42 @@ public class OrderManager : MonoBehaviour
             return;
         }
 
-        int randomIndex = UnityEngine.Random.Range(0, availableOrders.Length);
+        List<OrderDataSO> availableNewOrders = new List<OrderDataSO>();
 
-        currentOrder = availableOrders[randomIndex];
-
-        requirementProgress = new RequirementProgress[currentOrder.Requirements.Length];
-
-        for (int i = 0; i < currentOrder.Requirements.Length; i++)
+        foreach (OrderDataSO order in availableOrders)
         {
-            OrderRequirement requirement = currentOrder.Requirements[i];
+            bool alreadyActive = false;
 
-            requirementProgress[i] = new RequirementProgress
+            foreach (ActiveOrder activeOrder in activeOrders)
+            {
+                if (activeOrder.Order == order)
+                {
+                    alreadyActive = true;
+                    break;
+                }
+            }
+
+            if (!alreadyActive)
+                availableNewOrders.Add(order);
+        }
+
+        if (availableNewOrders.Count == 0)
+        {
+            Debug.LogWarning("Não há mais pedidos disponíveis.");
+            return;
+        }
+
+        int randomIndex = UnityEngine.Random.Range(0, availableNewOrders.Count);
+        OrderDataSO selectedOrder = availableNewOrders[randomIndex];
+
+        RequirementProgress[] progress =
+            new RequirementProgress[selectedOrder.Requirements.Length];
+
+        for (int i = 0; i < selectedOrder.Requirements.Length; i++)
+        {
+            OrderRequirement requirement = selectedOrder.Requirements[i];
+
+            progress[i] = new RequirementProgress
             {
                 Item = requirement.Item,
                 RequiredAmount = requirement.Amount,
@@ -62,17 +96,28 @@ public class OrderManager : MonoBehaviour
             };
         }
 
+        ActiveOrder newActiveOrder = new ActiveOrder
+        {
+            Order = selectedOrder,
+            RequirementProgress = progress
+        };
+
+        activeOrders.Add(newActiveOrder);
+
         OnOrderChanged?.Invoke();
     }
 
+    // o pedido atual é o índice 0 da lista de pedidos ativos, caso não haja pedidos ativos, ele retorna false
     public bool TryDeliver(IDeliverable deliverable, GameObject deliveredObject)
     {
-        if (currentOrder == null)
+        if (activeOrders.Count == 0)
             return false;
+
+        ActiveOrder activeOrder = activeOrders[0];
 
         RequirementProgress matchingRequirement = null;
 
-        foreach (RequirementProgress progress in requirementProgress)
+        foreach (RequirementProgress progress in activeOrder.RequirementProgress)
         {
             if (progress.Item == deliverable.ItemType)
             {
@@ -97,6 +142,8 @@ public class OrderManager : MonoBehaviour
 
         Destroy(deliveredObject);
 
+        OnOrderProgressChanged?.Invoke(); //atualiza a UI do pedido atual
+
         if (IsOrderComplete())
         {
             CompleteOrder();
@@ -107,7 +154,9 @@ public class OrderManager : MonoBehaviour
 
     private bool IsOrderComplete()
     {
-        foreach (RequirementProgress progress in requirementProgress)
+        ActiveOrder activeOrder = activeOrders[0];
+
+        foreach (RequirementProgress progress in activeOrder.RequirementProgress)
         {
             if (progress.DeliveredAmount < progress.RequiredAmount)
                 return false;
@@ -118,16 +167,43 @@ public class OrderManager : MonoBehaviour
 
     private void CompleteOrder()
     {
+        ActiveOrder completedOrder = activeOrders[0];
+
         Debug.Log("PEDIDO COMPLETO!");
-        OnOrderProgressChanged?.Invoke();
 
-        currencyManager.AddCurrency(currentOrder.RewardAmount);
+        currencyManager.AddCurrency(completedOrder.Order.RewardAmount);
 
-        StartNewOrder();
+        activeOrders.RemoveAt(0);
+
+        OnOrderChanged?.Invoke();
     }
+
+    //troca o pedido atual com outro pedido ativo, caso o índice seja inválido, ele não fará nada
+    public void SwitchActiveOrder(int index)
+    {
+        if (index < 0 || index >= activeOrders.Count)
+        {
+            Debug.LogWarning("Índice de pedido inválido.");
+            return;
+        }
+
+        if (index == 0)
+            return;
+
+        ActiveOrder selectedOrder = activeOrders[index];
+
+        activeOrders.RemoveAt(index);
+        activeOrders.Insert(0, selectedOrder);
+
+        OnOrderChanged?.Invoke();
+    }
+
     public int GetDeliveredAmount(ItemTypeSO item)
     {
-        foreach (RequirementProgress progress in requirementProgress)
+        if (activeOrders.Count == 0)
+            return 0;
+
+        foreach (RequirementProgress progress in activeOrders[0].RequirementProgress)
         {
             if (progress.Item == item)
                 return progress.DeliveredAmount;
