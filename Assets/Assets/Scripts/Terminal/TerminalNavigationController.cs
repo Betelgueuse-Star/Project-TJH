@@ -60,19 +60,21 @@ public class TerminalNavigationController : MonoBehaviour
 
     public void NextScreen()
     {
-        if (currentScreenIndex >= screens.Length - 1)
-            return;
-
         currentScreenIndex++;
+
+        if (currentScreenIndex >= screens.Length)
+            currentScreenIndex = 0;
+
         ActivateScreen(currentScreenIndex);
     }
 
     public void PreviousScreen()
     {
-        if (currentScreenIndex <= 0)
-            return;
-
         currentScreenIndex--;
+
+        if (currentScreenIndex < 0)
+            currentScreenIndex = screens.Length - 1;
+
         ActivateScreen(currentScreenIndex);
     }
 
