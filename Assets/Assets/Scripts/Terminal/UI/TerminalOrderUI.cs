@@ -48,7 +48,7 @@ public class TerminalOrderUI : MonoBehaviour
             orderIndex == OrderManager.Instance.ActiveOrderIndex
         );
 
-        orderUI.RewardText.text = $"Recompensa: ${order.RewardAmount}";
+        orderUI.RewardText.text = $"Reward: ${order.RewardAmount}";
 
         foreach (OrderRequirement requirement in order.Requirements)
         {
