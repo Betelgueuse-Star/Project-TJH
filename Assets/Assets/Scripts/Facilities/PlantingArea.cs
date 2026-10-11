@@ -50,7 +50,7 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
     {
         if (soilPlacedData != null) return; 
         if (!soilBag.TryGetComponent(out ObjectGrabbable grabbable)) return;
-        if (grabbable.IsBeingHeld) return; 
+        //if (grabbable.IsBeingHeld) return; 
 
 
         PlaceSoil(soilBag);

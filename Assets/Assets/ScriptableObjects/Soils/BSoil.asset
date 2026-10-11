@@ -15,4 +15,4 @@ MonoBehaviour:
   soilName: BSoil
   growthMultiplier: 2
   maxUses: 3
-  soilPrefab: {fileID: 6208110011841838250, guid: b8fe2f13658770c49865cdf46d92bbee, type: 3}
+  soilPrefab: {fileID: 2221587382262589267, guid: d155ec240ed8e434283fd422a8047a5c, type: 3}
