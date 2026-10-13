@@ -61,7 +61,7 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
         if (currentState != PlantGrowthState.Empty) return;
         if (soilPlacedData == null) return;
         if (!seed.TryGetComponent(out ObjectGrabbable grabbable)) return; 
-        if (grabbable.IsBeingHeld) return; 
+        //if (grabbable.IsBeingHeld) return; 
 
 
         PlantSeed(seed);
@@ -76,7 +76,7 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
         if (!fertilizer.TryGetComponent(out ObjectGrabbable grabbable))
             return;
 
-        if (grabbable.IsBeingHeld) return;
+        //if (grabbable.IsBeingHeld) return;
         if (fertilizer.FertilizerData == null) return;
 
         PlaceFertilizer(fertilizer);
