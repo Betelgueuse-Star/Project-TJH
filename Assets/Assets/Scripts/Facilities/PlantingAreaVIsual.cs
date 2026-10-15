@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using TMPro;
 
@@ -14,6 +13,24 @@ public class PlantingAreaVisual : MonoBehaviour
     private ParticleSystem currentFertilizerEffect;
     private GameObject currentPlantVisual;
     private GameObject currentSoilVisual;
+
+    // MUDANÇA: o mesmo "Instantiate(prefab, plantingPoint.position, plantingPoint.rotation)"
+    // aparecia três vezes. Agora existe um helper só. É genérico para servir
+    // tanto para GameObject quanto para ParticleSystem.
+    private T SpawnAtPoint<T>(T prefab) where T : Object
+    {
+        return Instantiate(prefab, plantingPoint.position, plantingPoint.rotation);
+    }
+
+    // MUDANÇA: o padrão "se não é nulo, destrói e zera" se repetia em vários métodos.
+    private static void DestroyAndClear(ref GameObject visual)
+    {
+        if (visual == null)
+            return;
+
+        Destroy(visual);
+        visual = null;
+    }
 
     public void UpdateWaterText(float currentWater)
     {
@@ -31,16 +48,11 @@ public class PlantingAreaVisual : MonoBehaviour
 
     public void UpdateSoilVisual(SoilDataSO soilData)
     {
-        if (currentSoilVisual != null)
-            Destroy(currentSoilVisual);
+        DestroyAndClear(ref currentSoilVisual);
 
         if (soilData != null && soilData.soilPrefab != null)
         {
-            currentSoilVisual = Instantiate(
-                soilData.soilPrefab,
-                plantingPoint.position,
-                plantingPoint.rotation
-            );
+            currentSoilVisual = SpawnAtPoint(soilData.soilPrefab);
         }
     }
 
@@ -49,71 +61,41 @@ public class PlantingAreaVisual : MonoBehaviour
         SeedDataSO plantedSeedData,
         PlantingArea plantingArea)
     {
-        if (currentPlantVisual != null)
-            Destroy(currentPlantVisual);
+        DestroyAndClear(ref currentPlantVisual);
 
-        GameObject prefabToSpawn = null;
+        // MUDANÇA: o switch que escolhia o prefab de cada estágio foi para o
+        // SeedDataSO (GetStagePrefab). Se um dia houver um estágio novo, o switch
+        // só precisa mudar lá.
+        GameObject prefabToSpawn = plantedSeedData != null
+            ? plantedSeedData.GetStagePrefab(currentState)
+            : null;
 
-        if (plantedSeedData != null)
+        // MUDANÇA: retorno antecipado, em vez de aninhar o resto dentro de um if.
+        if (prefabToSpawn == null)
+            return;
+
+        currentPlantVisual = SpawnAtPoint(prefabToSpawn);
+
+        if (currentState == PlantGrowthState.Ready &&
+            currentPlantVisual.TryGetComponent(out Sapling sapling))
         {
-            switch (currentState)
-            {
-                case PlantGrowthState.Seed:
-                    prefabToSpawn = plantedSeedData.seedPrefab;
-                    break;
-
-                case PlantGrowthState.Germinating:
-                    prefabToSpawn = plantedSeedData.germinatingPrefab;
-                    break;
-
-                case PlantGrowthState.Growing:
-                    prefabToSpawn = plantedSeedData.growingPrefab;
-                    break;
-
-                case PlantGrowthState.Ready:
-                    prefabToSpawn = plantedSeedData.readyPrefab;
-                    break;
-            }
-        }
-
-        if (prefabToSpawn != null)
-        {
-            currentPlantVisual = Instantiate(
-                prefabToSpawn,
-                plantingPoint.position,
-                plantingPoint.rotation
-            );
-
-            if (currentState == PlantGrowthState.Ready &&
-                currentPlantVisual.TryGetComponent(out Sapling sapling))
-            {
-                sapling.Setup(plantedSeedData, plantingArea);
-            }
+            sapling.Setup(plantedSeedData, plantingArea);
         }
     }
 
     public void DestroyPlant()
     {
-        if (currentPlantVisual != null)
-        {
-            Destroy(currentPlantVisual);
-            currentPlantVisual = null;
-        }
+        DestroyAndClear(ref currentPlantVisual);
     }
 
-    public void RemovePlantVisual()
+    public void RemovePlantVisual() 
     {
-        if (currentPlantVisual != null)
-            currentPlantVisual = null;
+        currentPlantVisual = null;
     }
 
     public void RemoveSoilVisual()
     {
-        if (currentSoilVisual != null)
-        {
-            Destroy(currentSoilVisual);
-            currentSoilVisual = null;
-        }
+        DestroyAndClear(ref currentSoilVisual);
     }
 
     public void PlayFertilizerEffect(FertilizerDataSO fertilizerData)
@@ -124,21 +106,19 @@ public class PlantingAreaVisual : MonoBehaviour
 
         DestroyFertilizerEffect();
 
-        currentFertilizerEffect = Instantiate(
-            fertilizerData.fertilizerParticle,
-            plantingPoint.position,
-            plantingPoint.rotation
-        );
+        currentFertilizerEffect = SpawnAtPoint(fertilizerData.fertilizerParticle);
 
         currentFertilizerEffect.Play();
     }
 
+    // O efeito é um ParticleSystem, então destrói o gameObject dele (por isso não
+    // usa o DestroyAndClear, que trabalha com GameObject).
     public void DestroyFertilizerEffect()
     {
-        if (currentFertilizerEffect != null)
-        {
-            Destroy(currentFertilizerEffect.gameObject);
-            currentFertilizerEffect = null;
-        }
+        if (currentFertilizerEffect == null)
+            return;
+
+        Destroy(currentFertilizerEffect.gameObject);
+        currentFertilizerEffect = null;
     }
 }

@@ -29,4 +29,49 @@ public class SeedDataSO : ScriptableObject
 
     [Header("Resultado")]
     public GameObject readyPrefab;
+
+    // MUDANÇA: antes o switch por estágio existia em dois lugares (PlantingArea para a
+    // água e PlantingAreaVisual para o prefab). Como os dados estão aqui, as
+    // consultas também ficam aqui: um lugar só para mexer ao criar um novo estágio.
+
+    // Prefab visual correspondente ao estágio (null se não houver).
+    public GameObject GetStagePrefab(PlantGrowthState state)
+    {
+        switch (state)
+        {
+            case PlantGrowthState.Seed:
+                return seedPrefab;
+
+            case PlantGrowthState.Germinating:
+                return germinatingPrefab;
+
+            case PlantGrowthState.Growing:
+                return growingPrefab;
+
+            case PlantGrowthState.Ready:
+                return readyPrefab;
+
+            default:
+                return null;
+        }
+    }
+
+    // Quantidade de água necessária no estágio (0 nos estágios sem exigência).
+    public float GetRequiredWater(PlantGrowthState state)
+    {
+        switch (state)
+        {
+            case PlantGrowthState.Seed:
+                return seedRequiredWater;
+
+            case PlantGrowthState.Germinating:
+                return germinatingRequiredWater;
+
+            case PlantGrowthState.Growing:
+                return growingRequiredWater;
+
+            default:
+                return 0f;
+        }
+    }
 }

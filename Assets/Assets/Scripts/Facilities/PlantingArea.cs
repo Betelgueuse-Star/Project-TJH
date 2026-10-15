@@ -1,10 +1,17 @@
 using UnityEngine;
-using System.Collections;
 
-
+[RequireComponent(typeof(PlantingAreaVisual))]
 public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractable
 {
-    private PlantingAreaVisual pAVisual;
+    public enum PlantingInteraction
+    {
+        None = 0,
+        RemoveAll = 1, // pá
+        Water = 2      // regador
+    }
+    private const int GrowthStageCount = 3; //quantidade de estágios com espera (Seed, Germinating e Growing).
+
+    private PlantingAreaVisual plantingAVisual;
     private SeedDataSO plantedSeedData;
     private SoilDataSO soilPlacedData;
     private FertilizerDataSO fertilizerPlacedData;
@@ -12,12 +19,22 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
 
     private float currentWater;
 
+
+    private float stageDuration;
+    private bool waitingForWater;
+
+    // propriedades de leitura usadas pelos itens (IAreaItem) para
+    // decidir se podem ser aplicados, sem expor os campos privados.
+    public bool HasSoil => soilPlacedData != null;
+    public bool IsEmpty => currentState == PlantGrowthState.Empty;
+    public bool HasFertilizer => fertilizerPlacedData != null;
+
     private void Awake()
     {
-        pAVisual = GetComponent<PlantingAreaVisual>();
+        plantingAVisual = GetComponent<PlantingAreaVisual>();
 
-        pAVisual.UpdateWaterText(currentWater);
-        pAVisual.UpdateGrowthStageText(currentState);
+        plantingAVisual.UpdateWaterText(currentWater);
+        plantingAVisual.UpdateGrowthStageText(currentState);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -25,136 +42,138 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
         HandleObjectEntered(other);
     }
 
+    // MUDANÇA: antes só o OnTriggerEnter tentava aplicar o item. Como agora o item
+    // só é aplicado quando NÃO está na mão, quem solta dentro da área precisa de uma
+    // nova tentativa. O OnTriggerStay repete a checagem enquanto o item estiver lá.
+    // Dica: coloque os itens em uma layer própria e configure a matriz de colisão
+    // (Project Settings > Physics) para a área só enxergar essa layer.
+    private void OnTriggerStay(Collider other)
+    {
+        HandleObjectEntered(other);
+    }
+
+    // MUDANÇA: antes eram três TryGetComponent (Seed, SoilBag, Fertilizer) e três
+    // métodos Try... quase iguais. Agora cada item implementa IAreaItem e decide
+    // sozinho se pode ser aplicado. A PlantingArea não precisa mais conhecer cada
+    // tipo de item: item novo = classe nova, sem mexer aqui.
     private void HandleObjectEntered(Collider other)
     {
-        if (other.TryGetComponent(out Seed seed))
-        {
-            TryPlantSeed(seed);
-            return;
-        }
+        // MUDANÇA: a checagem do ObjectGrabbable, que antes se repetia nos três
+        // métodos (e estava sem uso, com o IsBeingHeld comentado), agora é feita
+        // uma vez só. Item na mão não é aplicado.
+        if (!other.TryGetComponent(out ObjectGrabbable grabbable)) return;
+        if (grabbable.IsBeingHeld) return;
 
-        if (other.TryGetComponent(out SoilBag soilBag))
+        if (other.TryGetComponent(out IAreaItem item) && item.CanApply(this))
         {
-            TryPlaceSoil(soilBag);
-            return;
-        }
-
-        if (other.TryGetComponent(out Fertilizer fertilizer))
-        {
-            TryPlaceFertilizer(fertilizer);
-            return;
+            item.Apply(this);
         }
     }
 
-    private void TryPlaceSoil(SoilBag soilBag)
+    // MUDANÇA: os três métodos abaixo agora são públicos e recebem o dado (SO) em vez
+    // do objeto. Quem destrói o objeto é o próprio item, dentro do IAreaItem.Apply.
+    public void PlaceSoil(SoilDataSO soilData)
     {
-        if (soilPlacedData != null) return; 
-        if (!soilBag.TryGetComponent(out ObjectGrabbable grabbable)) return;
-        //if (grabbable.IsBeingHeld) return; 
+        soilPlacedData = soilData;
 
-
-        PlaceSoil(soilBag);
+        plantingAVisual.UpdateSoilVisual(soilPlacedData);
     }
 
-    private void TryPlantSeed(Seed seed)
+    public void PlantSeed(SeedDataSO seedData)
     {
-        if (currentState != PlantGrowthState.Empty) return;
-        if (soilPlacedData == null) return;
-        if (!seed.TryGetComponent(out ObjectGrabbable grabbable)) return; 
-        //if (grabbable.IsBeingHeld) return; 
+        plantedSeedData = seedData;
 
+        // MUDANÇA: o tempo de cada estágio é calculado uma única vez, aqui.
+        stageDuration = CalculateGrowthTime() / GrowthStageCount;
+        waitingForWater = false;
 
-        PlantSeed(seed);
+        // MUDANÇA: ChangeState já atualiza o visual da planta E o texto do estágio.
+        // Antes o texto só era atualizado ao chegar em Germinating (ficava "Empty"
+        // enquanto era semente).
+        ChangeState(PlantGrowthState.Seed);
+
+        StartStageTimer();
     }
 
-    private void TryPlaceFertilizer(Fertilizer fertilizer)
+    public void PlaceFertilizer(FertilizerDataSO fertilizerData)
     {
-        if (soilPlacedData == null) return;
-        if (currentState != PlantGrowthState.Empty) return;
-        if (fertilizerPlacedData != null) return;
+        fertilizerPlacedData = fertilizerData;
 
-        if (!fertilizer.TryGetComponent(out ObjectGrabbable grabbable))
-            return;
-
-        //if (grabbable.IsBeingHeld) return;
-        if (fertilizer.FertilizerData == null) return;
-
-        PlaceFertilizer(fertilizer);
+        plantingAVisual.PlayFertilizerEffect(fertilizerPlacedData);
     }
 
-    private void PlaceSoil(SoilBag soilBag)
+    // MUDANÇA: no lugar da coroutine GrowPlant. Agenda UMA chamada para o fim do
+    // estágio. Não existe Update nem loop: entre um estágio e outro, a planta não
+    // gasta nada por frame. O Invoke do Unity respeita o Time.timeScale (como o
+    // WaitForSeconds) e não aloca memória.
+    private void StartStageTimer()
     {
-        soilPlacedData = soilBag.SoilData;
-
-        Destroy(soilBag.gameObject);
-
-        pAVisual.UpdateSoilVisual(soilPlacedData);
+        Invoke(nameof(OnStageTimeFinished), stageDuration);
     }
 
-    private void PlantSeed(Seed seed)
+    // Chamado pelo Invoke quando o tempo do estágio termina.
+    private void OnStageTimeFinished()
     {
-        plantedSeedData = seed.SeedData;
-        currentState = PlantGrowthState.Seed;
-
-        float totalGrowthTime = CalculateGrowthTime();
-
-        Destroy(seed.gameObject);
-
-        pAVisual.UpdatePlantVisual(currentState, plantedSeedData, this);
-
-        StartCoroutine(GrowPlant(totalGrowthTime));
+        waitingForWater = true;
+        EvaluateStage();
     }
 
-
-    private void PlaceFertilizer(Fertilizer fertilizer)
+    // MUDANÇA: junta o que antes era WaitForCorrectWater + o "ChangeState + ResetPlantWater"
+    // repetido três vezes na coroutine. É chamado quando o tempo acaba e também
+    // sempre que a água muda (AddPlantWater), em vez de ficar checando todo frame.
+    private void EvaluateStage()
     {
-        fertilizerPlacedData = fertilizer.FertilizerData;
+        switch (CheckWater())
+        {
+            case WaterStatus.TooLittle:
+                //esperar até que a planta receba a quantidade correta de água
+                // (o AddPlantWater chama EvaluateStage de novo quando chegar mais água)
+                return;
 
-        Destroy(fertilizer.gameObject);
+            case WaterStatus.TooMuch:
+                //se ultrapassar a quantidade de água necessária, a planta morre
+                KillPlant();
+                return;
 
-        pAVisual.PlayFertilizerEffect(fertilizerPlacedData);
-    }   
+            default:
+                AdvanceStage();
+                return;
+        }
+    }
 
-    private IEnumerator GrowPlant(float totalGrowthTime)
+    // MUDANÇA: um único método para avançar de estágio, no lugar das três cópias
+    // (Germinating, Growing, Ready) que existiam dentro da coroutine.
+    private void AdvanceStage()
     {
-        float stageTime = totalGrowthTime / 3f;
+        waitingForWater = false;
 
-        // Seed
-        yield return new WaitForSeconds(stageTime);
-
-        yield return WaitForCorrectWater();
-
-        if (currentState == PlantGrowthState.Empty)
-            yield break;
-
-        ChangeState(PlantGrowthState.Germinating);
+        ChangeState(GetNextState(currentState));
         ResetPlantWater();
 
-
-        // Germinating
-        yield return new WaitForSeconds(stageTime);
-
-        yield return WaitForCorrectWater();
-
-        if (currentState == PlantGrowthState.Empty)
-            yield break;
-
-        ChangeState(PlantGrowthState.Growing);
-        ResetPlantWater();
-
-
-        // Growing
-        yield return new WaitForSeconds(stageTime);
-
-        yield return WaitForCorrectWater();
-
-        if (currentState == PlantGrowthState.Empty)
-            yield break;
-
-        ChangeState(PlantGrowthState.Ready);
-        ResetPlantWater();
+        if (currentState != PlantGrowthState.Ready)
+            StartStageTimer();
     }
 
+    private PlantGrowthState GetNextState(PlantGrowthState state)
+    {
+        switch (state)
+        {
+            // Seed
+            case PlantGrowthState.Seed:
+                return PlantGrowthState.Germinating;
+
+            // Germinating
+            case PlantGrowthState.Germinating:
+                return PlantGrowthState.Growing;
+
+            // Growing
+            case PlantGrowthState.Growing:
+                return PlantGrowthState.Ready;
+
+            default:
+                return state;
+        }
+    }
 
     private float CalculateGrowthTime()
     {
@@ -190,32 +209,18 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
     {
         currentState = newState;
 
-        pAVisual.UpdatePlantVisual(
+        plantingAVisual.UpdatePlantVisual(
             currentState,
             plantedSeedData,
             this
         );
 
-        pAVisual.UpdateGrowthStageText(currentState);
-    }
-
-    private IEnumerator WaitForCorrectWater()
-    {
-        while (CheckWater() == WaterStatus.TooLittle)//esperar até que a planta receba a quantidade correta de água
-        {
-            yield return null;
-        }
-
-        if (CheckWater() == WaterStatus.TooMuch)//se ultrapassar a quantidade de água necessária, a planta morre
-        {
-            KillPlant();
-            yield break;
-        }
+        plantingAVisual.UpdateGrowthStageText(currentState);
     }
 
     private WaterStatus CheckWater()
     {
-        float requiredWater = GetRequiredWater();
+        float requiredWater = plantedSeedData.GetRequiredWater(currentState);
         float tolerance = plantedSeedData.waterTolerance;
 
         if (currentWater < requiredWater - tolerance)
@@ -227,132 +232,98 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
         return WaterStatus.Correct;
     }
 
-    private float GetRequiredWater()
-    {
-        switch (currentState)
-        {
-            case PlantGrowthState.Seed:
-                return plantedSeedData.seedRequiredWater;
-
-            case PlantGrowthState.Germinating:
-                return plantedSeedData.germinatingRequiredWater;
-
-            case PlantGrowthState.Growing:
-                return plantedSeedData.growingRequiredWater;
-
-            default:
-                return 0f;
-        }
-    }
-
     private void KillPlant()
     {
-        StopAllCoroutines();
+        // CancelInvoke no lugar de StopAllCoroutines. Cancela só o timer
+        // do estágio, sem afetar mais nada do objeto.
+        CancelInvoke(nameof(OnStageTimeFinished));
+        waitingForWater = false;
 
-        pAVisual.DestroyPlant();
-        pAVisual.DestroyFertilizerEffect();
+        plantingAVisual.DestroyPlant();
+        plantingAVisual.DestroyFertilizerEffect();
 
         fertilizerPlacedData = null;
         plantedSeedData = null;
         currentState = PlantGrowthState.Empty;
 
         ResetPlantWater();
-        pAVisual.UpdateGrowthStageText(currentState);
+        plantingAVisual.UpdateGrowthStageText(currentState);
     }
 
     private void ResetPlantWater()
     {
         currentWater = 0f;
-        pAVisual.UpdateWaterText(currentWater);
+        plantingAVisual.UpdateWaterText(currentWater);
     }
 
     public void RemoveGrowPlant()
     {
-        pAVisual.RemovePlantVisual();
-        plantedSeedData = null;
-        currentState = PlantGrowthState.Empty;
+        // Solta a referência do visual SEM destruir (a planta colhida cuida de si mesma).
+        // Precisa vir antes do KillPlant, que destruiria o visual.
+        plantingAVisual.RemovePlantVisual();
 
         KillPlant();
 
         Debug.Log("Planta removida. Área disponível novamente.");
     }
 
-    //remove tudo
-    public void RemoveEverything(Player player)
+    // MUDANÇA: não recebe mais o Player. As checagens de "tem solo / está com a pá"
+    // agora ficam no GetInteraction, então aqui só resta remover.
+    public void RemoveEverything()
     {
-        if (soilPlacedData == null)
-            return;
-
-        if (player.CurrentTool == null)
-            return;
-
-        if (!player.CurrentTool.TryGetComponent(out Shovel shovel))
-            return;
-
-        StopAllCoroutines();
-
-        // Remover planta, se existir
-        pAVisual.DestroyPlant();
-
-
-        plantedSeedData = null;
-        currentState = PlantGrowthState.Empty;
+        KillPlant();
 
         // Remover visual, e atualizar textos
-        pAVisual.RemoveSoilVisual();
-        pAVisual.DestroyFertilizerEffect();
-        ResetPlantWater();
-        pAVisual.UpdateGrowthStageText(currentState);
-
+        plantingAVisual.RemoveSoilVisual();
         soilPlacedData = null;
-        fertilizerPlacedData = null;
+    }
+
+    // MUDANÇA: toda a lógica de "o que dá para fazer com a ferramenta na mão" ficou
+    // aqui. Antes os TryGetComponent de Shovel e WateringCan se repetiam em
+    // CanInteract, RemoveEverything e Interact.
+    public PlantingInteraction GetInteraction(Player player)
+    {
+        GameObject tool = player.CurrentTool;
+
+        if (tool == null)
+            return PlantingInteraction.None;
+
+        // pá: precisa ter solo
+        if (HasSoil && tool.TryGetComponent(out Shovel _))
+            return PlantingInteraction.RemoveAll;
+
+        // regador: precisa de planta, e o regador precisa ter água
+        if (plantedSeedData != null &&
+            currentState != PlantGrowthState.Ready &&
+            tool.TryGetComponent(out WateringCan wateringCan) &&
+            wateringCan.CurrentWater > 0f)
+        {
+            return PlantingInteraction.Water;
+        }
+
+        return PlantingInteraction.None;
     }
 
     //segura um regador/2 ou pá/1 
     public (bool, float) CanInteract(Player player)
     {
-        if (player.CurrentTool == null)
-            return (false, 0f);
+        PlantingInteraction interaction = GetInteraction(player);
 
-        if (player.CurrentTool.TryGetComponent(out Shovel shovel))
-        {
-            if (soilPlacedData == null) return (false, 0f);
-
-            else return (true, 1f);
-        }
-
-        if (player.CurrentTool.TryGetComponent(out WateringCan wateringCan))
-        {
-            if (plantedSeedData == null) return (false, 0f);
-
-            if (wateringCan.CurrentWater <= 0f)
-                return (false, 0f);
-
-            else return (true, 2f);
-        }
-
-        else return (false, 0f);
+        return (interaction != PlantingInteraction.None, (float)interaction);
     }
 
     public void Interact(Player player)
     {
-        var (canInteract, interactionValue) = CanInteract(player);
-
-        if (!canInteract)
-            return;
-
-        if (interactionValue == 1f)
+        switch (GetInteraction(player))
         {
-            KillPlant();
-            RemoveEverything(player);
-        }
-        
-        if (interactionValue == 2f)
-        {
-            if (player.CurrentTool.TryGetComponent(out WateringCan wateringCan))
-            {
-                AddPlantWater(wateringCan);
-            }
+            case PlantingInteraction.RemoveAll:
+                RemoveEverything();
+                break;
+
+            case PlantingInteraction.Water:
+                // O GetInteraction já garantiu que a ferramenta é um regador.
+                AddPlantWater(player.CurrentTool.GetComponent<WateringCan>());
+                break;
         }
     }
 
@@ -360,7 +331,13 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
     {
         currentWater += wateringCan.GetAndRemoveWater(wateringCan.WaterAmount);
 
-        pAVisual.UpdateWaterText(currentWater);
+        plantingAVisual.UpdateWaterText(currentWater);
         Debug.Log($"Água adicionada à planta. Água atual: {currentWater}");
+
+        // É aqui que reavaliamos se a planta que
+        // estava esperando já pode avançar (ou morrer por excesso de água).
+        // Não precisa mais de loop checando todo frame.
+        if (waitingForWater)
+            EvaluateStage();
     }
 }
