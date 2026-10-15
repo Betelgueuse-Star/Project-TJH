@@ -12,6 +12,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClipRefsSO audioClipRefsSO;
     [SerializeField] private AudioClip buttonClickSound;
 
+    private AudioSource audioSource;
     private float volume = 1f;
 
     private void Awake()
@@ -24,6 +25,8 @@ public class SoundManager : MonoBehaviour
 
         //aqui a gente pega oq foi salva, o 1f e o default value, caso nada foi salvo ainda
         volume = PlayerPrefs.GetFloat(PLAYER_PREFS_SOUND_EFFECTS_VOLUME, 1f);
+
+        audioSource = GetComponent<AudioSource>();
 
     }
     private void Start()
@@ -92,7 +95,10 @@ public class SoundManager : MonoBehaviour
     }
     public void PlayOnSelectedSound()
     {
-        PlaySound(buttonClickSound, Vector3.zero, 1 * volume);
+        if (buttonClickSound == null || audioSource == null)
+            return;
+
+        audioSource.PlayOneShot(buttonClickSound, volume); // playoneShot toca o som uma vez, diferente do playclipatpoint que cria um novo audio source para tocar o som
     }
 
     public void ChangeVolume(float soundEffectVolume)
