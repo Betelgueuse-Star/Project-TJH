@@ -3,12 +3,10 @@ using UnityEngine;
 [RequireComponent(typeof(PlantingAreaVisual))]
 public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractable
 {
-    public enum PlantingInteraction
-    {
-        None = 0,
-        RemoveAll = 1, // pá
-        Water = 2      // regador
-    }
+    // MUDANÇA: o enum PlantingInteraction que ficava aqui dentro saiu. Agora existe um
+    // InteractionType global (InteractionTypes.cs), compartilhado com o WaterTank e
+    // com qualquer outro objeto interagível.
+
     private const int GrowthStageCount = 3; //quantidade de estágios com espera (Seed, Germinating e Growing).
 
     private PlantingAreaVisual plantingAVisual;
@@ -278,51 +276,51 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
         soilPlacedData = null;
     }
 
-    // MUDANÇA: toda a lógica de "o que dá para fazer com a ferramenta na mão" ficou
-    // aqui. Antes os TryGetComponent de Shovel e WateringCan se repetiam em
-    // CanInteract, RemoveEverything e Interact.
-    public PlantingInteraction GetInteraction(Player player)
+    //segura um regador ou pá
+    // MUDANÇA: este método substitui o GetInteraction antigo E o CanInteract (que devolvia
+    // (bool, float)). Agora há uma única consulta, e um switch sobre uma única variável
+    // (player.CurrentToolType) no lugar de vários TryGetComponent seguidos. Ferramenta
+    // nova = novo "case" aqui.
+    public InteractionType GetInteraction(Player player)
     {
-        GameObject tool = player.CurrentTool;
-
-        if (tool == null)
-            return PlantingInteraction.None;
-
-        // pá: precisa ter solo
-        if (HasSoil && tool.TryGetComponent(out Shovel _))
-            return PlantingInteraction.RemoveAll;
-
-        // regador: precisa de planta, e o regador precisa ter água
-        if (plantedSeedData != null &&
-            currentState != PlantGrowthState.Ready &&
-            tool.TryGetComponent(out WateringCan wateringCan) &&
-            wateringCan.CurrentWater > 0f)
+        switch (player.CurrentToolType)
         {
-            return PlantingInteraction.Water;
+            // pá: precisa ter solo
+            case ToolType.Shovel:
+                return HasSoil ? InteractionType.RemoveAll : InteractionType.None;
+
+            // regador: precisa de planta, e o regador precisa ter água
+            case ToolType.WateringCan:
+                if (plantedSeedData != null &&
+                    currentState != PlantGrowthState.Ready &&
+                    player.TryGetCurrentTool(out WateringCan wateringCan) &&
+                    wateringCan.CurrentWater > 0f)
+                {
+                    return InteractionType.Water;
+                }
+                return InteractionType.None;
+
+            default:
+                return InteractionType.None;
         }
-
-        return PlantingInteraction.None;
-    }
-
-    //segura um regador/2 ou pá/1 
-    public (bool, float) CanInteract(Player player)
-    {
-        PlantingInteraction interaction = GetInteraction(player);
-
-        return (interaction != PlantingInteraction.None, (float)interaction);
     }
 
     public void Interact(Player player)
     {
         switch (GetInteraction(player))
         {
-            case PlantingInteraction.RemoveAll:
+            case InteractionType.RemoveAll:
+                // FUTURO (animação): player.CurrentTool.PlayUse();
                 RemoveEverything();
                 break;
 
-            case PlantingInteraction.Water:
+            case InteractionType.Water:
                 // O GetInteraction já garantiu que a ferramenta é um regador.
-                AddPlantWater(player.CurrentTool.GetComponent<WateringCan>());
+                if (player.TryGetCurrentTool(out WateringCan wateringCan))
+                {
+                    // FUTURO (animação): wateringCan.PlayUse();
+                    AddPlantWater(wateringCan);
+                }
                 break;
         }
     }

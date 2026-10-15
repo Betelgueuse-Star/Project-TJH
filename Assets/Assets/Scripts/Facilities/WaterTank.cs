@@ -24,30 +24,28 @@ public class WaterTank : MonoBehaviour, IInteractable, IConditionalInteractable
         return waterTaken;
     }
 
-    public (bool, float) CanInteract(Player player)
+    // MUDANÇA: no lugar do CanInteract que devolvia (bool, float). Agora é uma comparação
+    // só: se o jogador está com o regador, a interação disponível é encher o regador.
+    // Sem TryGetComponent aqui (o Player já sabe o tipo da ferramenta).
+    public InteractionType GetInteraction(Player player)
     {
-        if (player.CurrentTool == null)
-            return (false, 0f);
+        if (player.CurrentToolType == ToolType.WateringCan)
+            return InteractionType.FillWateringCan;
 
-        if (player.CurrentTool.TryGetComponent(out WateringCan wateringCan))
-           return (true, 2f);
-
-        else return (false, 0f);
+        return InteractionType.None;
     }
 
     public void Interact(Player player)
     {
-        var (canInteract, interactionValue) = CanInteract(player);
-
-        if (!canInteract)
+        // MUDANÇA: antes pegava o (canInteract, interactionValue) e comparava com 2f.
+        if (GetInteraction(player) != InteractionType.FillWateringCan)
             return;
 
-        if (interactionValue == 2f)
+        // Só aqui, na hora de realmente interagir, precisamos do componente do regador.
+        if (player.TryGetCurrentTool(out WateringCan wateringCan))
         {
-            if (player.CurrentTool.TryGetComponent(out WateringCan wateringCan))
-            {
-                wateringCan.FillFromTank(this);
-            }
+            // FUTURO (animação): wateringCan.PlayUse();
+            wateringCan.FillFromTank(this);
         }
     }
 }

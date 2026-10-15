@@ -15,8 +15,11 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask interactionLayerMask;
     [SerializeField] private float interactionRange = 3f;
 
-    private GameObject currentTool; // Ferramenta atualmente na mão e o prefab "do mundo" correspondente
-    private GameObject currentToolWorldPrefab; // usado para recriar o objeto no chão quando o jogador larga a ferramenta
+    // MUDANÇA: antes eram três campos para a ferramenta (currentTool como GameObject,
+    // currentToolWorldPrefab e currentToolComponent). Agora é UM só: a própria ferramenta
+    // (componente Tool). O GameObject e o tipo saem dela; não há mais nada para sincronizar.
+    private Tool currentTool;
+
     private ObjectGrabbable objectGrabbable; // Objeto físico que está sendo carregado.
     private InteractableOutline currentOutline; // Outline que está aceso no momento.
     private RaycastHit currentHit;
@@ -27,8 +30,16 @@ public class Player : MonoBehaviour
     private bool targetIsPickup;        // ObjectGrabbable ou Tool
     private bool targetIsInteractable;  // IInteractable
 
-    public GameObject CurrentTool => currentTool;
+    // MUDANÇA: o tipo agora vem direto do currentTool.
+    public ToolType CurrentToolType =>
+        currentTool != null ? currentTool.Type : ToolType.None;
+
+    // MUDANÇA: devolve o componente Tool em vez do GameObject. Código que fazia
+    // CurrentTool.TryGetComponent / GetComponent continua compilando (Tool é um Component).
+    // Se algum script usa "CurrentTool" como GameObject, troque por CurrentTool.gameObject.
+    public Tool CurrentTool => currentTool;
     public bool IsHoldingSomething => objectGrabbable != null || currentTool != null;
+
 
     private void Update()
     {
@@ -101,6 +112,10 @@ public class Player : MonoBehaviour
 
     private void DropCurrentItem()
     {
+        // MUDANÇA: zera o cache do alvo para o outline do objeto que você está olhando
+        // voltar a acender logo depois de largar o item.
+        lastCollider = null;
+
         // Caso 1: objeto físico. Basta soltar.
         if (objectGrabbable != null)
         {
@@ -109,48 +124,32 @@ public class Player : MonoBehaviour
             return;
         }
 
-        // Caso 2: ferramenta. Recria a versão "do mundo" e destrói a da mão.
+        // Caso 2: ferramenta.
+        // MUDANÇA: antes recriava o prefab "do mundo" (Instantiate) e destruía o da mão.
+        // Agora é o MESMO objeto: só o devolvemos ao mundo. Sem Instantiate/Destroy e sem
+        // depender de referência de prefab (que se perdia ao dropar).
         if (currentTool != null)
         {
-            if (currentToolWorldPrefab != null)
-            {
-                Instantiate(
-                    currentToolWorldPrefab,
-                    toolHoldPointTransform.position,
-                    transform.rotation);
-            }
-            else
-            {
-                Debug.LogWarning($"A ferramenta {currentTool.name} está sem WorldPrefab.", currentTool);
-            }
-
-            Destroy(currentTool);
+            currentTool.Drop(toolHoldPointTransform.position, transform.rotation);
             currentTool = null;
-
-            currentToolWorldPrefab = null; // limpa a referência para não ficar um prefab antigo guardado.
         }
     }
 
-    // Guarda o prefab "do mundo", cria a versão "equipada" na mão
-    // e destrói o objeto que estava no mundo.
+    // MUDANÇA: antes guardava o prefab "do mundo", criava a versão "equipada" na mão e
+    // destruía o objeto do mundo. Agora só coloca a própria ferramenta na mão.
     private void GrabTool(Tool newTool)
     {
         if (IsHoldingSomething)
             return;
 
-        // apaga o outline ANTES de destruir o objeto,
-        // evitando referência para algo destruído.
+        // apaga o outline antes de a ferramenta ir para a mão (o collider dela é desligado).
         lastCollider = null;
         HideCurrentOutline();
 
-        currentToolWorldPrefab = newTool.WorldPrefab;
-
-        currentTool = Instantiate(newTool.EquippedPrefab, toolHoldPointTransform);
-
-        currentTool.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-
-        Destroy(newTool.gameObject);
+        newTool.Equip(toolHoldPointTransform);
+        currentTool = newTool;
     }
+
 
     public void GrabObject(ObjectGrabbable newObjectGrabbable)
     {
@@ -195,5 +194,13 @@ public class Player : MonoBehaviour
             return;
 
         DropCurrentItem();
+    }
+
+    // Pega a ferramenta como um tipo específico (ex.: WateringCan), sem TryGetComponent
+    // MUDANÇA: T agora é Tool (antes EquippedTool) e o cast é feito direto no currentTool.
+    public bool TryGetCurrentTool<T>(out T tool) where T : Tool
+    {
+        tool = currentTool as T;
+        return tool != null;
     }
 }
