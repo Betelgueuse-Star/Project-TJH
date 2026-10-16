@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3758369127617850342}
   - component: {fileID: 6672185852346954525}
   m_Layer: 0
-  m_Name: BaseSoilPrafb
+  m_Name: BaseSoilPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

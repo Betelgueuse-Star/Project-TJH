@@ -3,10 +3,6 @@ using UnityEngine;
 [RequireComponent(typeof(PlantingAreaVisual))]
 public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractable
 {
-    // MUDANÇA: o enum PlantingInteraction que ficava aqui dentro saiu. Agora existe um
-    // InteractionType global (InteractionTypes.cs), compartilhado com o WaterTank e
-    // com qualquer outro objeto interagível.
-
     private const int GrowthStageCount = 3; //quantidade de estágios com espera (Seed, Germinating e Growing).
 
     private PlantingAreaVisual plantingAVisual;
@@ -17,12 +13,11 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
 
     private float currentWater;
 
-
     private float stageDuration;
     private bool waitingForWater;
 
     // propriedades de leitura usadas pelos itens (IAreaItem) para
-    // decidir se podem ser aplicados, sem expor os campos privados.
+    // decidir se podem ser aplicados
     public bool HasSoil => soilPlacedData != null;
     public bool IsEmpty => currentState == PlantGrowthState.Empty;
     public bool HasFertilizer => fertilizerPlacedData != null;
@@ -40,26 +35,20 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
         HandleObjectEntered(other);
     }
 
-    // MUDANÇA: antes só o OnTriggerEnter tentava aplicar o item. Como agora o item
-    // só é aplicado quando NÃO está na mão, quem solta dentro da área precisa de uma
-    // nova tentativa. O OnTriggerStay repete a checagem enquanto o item estiver lá.
-    // Dica: coloque os itens em uma layer própria e configure a matriz de colisão
-    // (Project Settings > Physics) para a área só enxergar essa layer.
+    // O OnTriggerStay repete a checagem
+    // Depois : colocar os itens em uma layer própria e configure a matriz de colisão
+    // (Project Settings > Physics) para a área só enxergar essa layer
     private void OnTriggerStay(Collider other)
     {
         HandleObjectEntered(other);
     }
 
-    // MUDANÇA: antes eram três TryGetComponent (Seed, SoilBag, Fertilizer) e três
-    // métodos Try... quase iguais. Agora cada item implementa IAreaItem e decide
-    // sozinho se pode ser aplicado. A PlantingArea não precisa mais conhecer cada
-    // tipo de item: item novo = classe nova, sem mexer aqui.
+    // cada item implementa IAreaItem e decide
+    // sozinho se pode ser aplicado
     private void HandleObjectEntered(Collider other)
     {
-        // MUDANÇA: a checagem do ObjectGrabbable, que antes se repetia nos três
-        // métodos (e estava sem uso, com o IsBeingHeld comentado), agora é feita
-        // uma vez só. Item na mão não é aplicado.
         if (!other.TryGetComponent(out ObjectGrabbable grabbable)) return;
+
         if (grabbable.IsBeingHeld) return;
 
         if (other.TryGetComponent(out IAreaItem item) && item.CanApply(this))
@@ -68,8 +57,6 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
         }
     }
 
-    // MUDANÇA: os três métodos abaixo agora são públicos e recebem o dado (SO) em vez
-    // do objeto. Quem destrói o objeto é o próprio item, dentro do IAreaItem.Apply.
     public void PlaceSoil(SoilDataSO soilData)
     {
         soilPlacedData = soilData;
@@ -81,13 +68,10 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
     {
         plantedSeedData = seedData;
 
-        // MUDANÇA: o tempo de cada estágio é calculado uma única vez, aqui.
+        // Tempo de cada estágio é calculado uma única vez aqui
         stageDuration = CalculateGrowthTime() / GrowthStageCount;
         waitingForWater = false;
 
-        // MUDANÇA: ChangeState já atualiza o visual da planta E o texto do estágio.
-        // Antes o texto só era atualizado ao chegar em Germinating (ficava "Empty"
-        // enquanto era semente).
         ChangeState(PlantGrowthState.Seed);
 
         StartStageTimer();
@@ -100,25 +84,21 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
         plantingAVisual.PlayFertilizerEffect(fertilizerPlacedData);
     }
 
-    // MUDANÇA: no lugar da coroutine GrowPlant. Agenda UMA chamada para o fim do
-    // estágio. Não existe Update nem loop: entre um estágio e outro, a planta não
-    // gasta nada por frame. O Invoke do Unity respeita o Time.timeScale (como o
-    // WaitForSeconds) e não aloca memória.
+    // Antigamente usava Update, depois Coutine, agora usa Invoke para chamar OnStageTimeFinished depois de stageDuration segundos.
     private void StartStageTimer()
     {
         Invoke(nameof(OnStageTimeFinished), stageDuration);
     }
 
-    // Chamado pelo Invoke quando o tempo do estágio termina.
+    // Chamado pelo Invoke quando o tempo do estágio termina
     private void OnStageTimeFinished()
     {
         waitingForWater = true;
         EvaluateStage();
     }
 
-    // MUDANÇA: junta o que antes era WaitForCorrectWater + o "ChangeState + ResetPlantWater"
-    // repetido três vezes na coroutine. É chamado quando o tempo acaba e também
-    // sempre que a água muda (AddPlantWater), em vez de ficar checando todo frame.
+    // É chamado quando o tempo acaba e também
+    // sempre que a água muda (AddPlantWater)
     private void EvaluateStage()
     {
         switch (CheckWater())
@@ -139,8 +119,7 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
         }
     }
 
-    // MUDANÇA: um único método para avançar de estágio, no lugar das três cópias
-    // (Germinating, Growing, Ready) que existiam dentro da coroutine.
+    // Avança para o próximo estágio, reseta a água e reinicia o timer
     private void AdvanceStage()
     {
         waitingForWater = false;
@@ -232,8 +211,6 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
 
     private void KillPlant()
     {
-        // CancelInvoke no lugar de StopAllCoroutines. Cancela só o timer
-        // do estágio, sem afetar mais nada do objeto.
         CancelInvoke(nameof(OnStageTimeFinished));
         waitingForWater = false;
 
@@ -254,9 +231,9 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
         plantingAVisual.UpdateWaterText(currentWater);
     }
 
+    // Por enquanto esse metodo é apenas chamado com o jogador interagindo com a sampling crecida 
     public void RemoveGrowPlant()
     {
-        // Solta a referência do visual SEM destruir (a planta colhida cuida de si mesma).
         // Precisa vir antes do KillPlant, que destruiria o visual.
         plantingAVisual.RemovePlantVisual();
 
@@ -265,8 +242,6 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
         Debug.Log("Planta removida. Área disponível novamente.");
     }
 
-    // MUDANÇA: não recebe mais o Player. As checagens de "tem solo / está com a pá"
-    // agora ficam no GetInteraction, então aqui só resta remover.
     public void RemoveEverything()
     {
         KillPlant();
@@ -277,10 +252,6 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
     }
 
     //segura um regador ou pá
-    // MUDANÇA: este método substitui o GetInteraction antigo E o CanInteract (que devolvia
-    // (bool, float)). Agora há uma única consulta, e um switch sobre uma única variável
-    // (player.CurrentToolType) no lugar de vários TryGetComponent seguidos. Ferramenta
-    // nova = novo "case" aqui.
     public InteractionType GetInteraction(Player player)
     {
         switch (player.CurrentToolType)
@@ -324,7 +295,6 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
                 break;
         }
     }
-
     public void AddPlantWater(WateringCan wateringCan)
     {
         currentWater += wateringCan.GetAndRemoveWater(wateringCan.WaterAmount);
@@ -332,10 +302,7 @@ public class PlantingArea : MonoBehaviour, IInteractable, IConditionalInteractab
         plantingAVisual.UpdateWaterText(currentWater);
         Debug.Log($"Água adicionada à planta. Água atual: {currentWater}");
 
-        // É aqui que reavaliamos se a planta que
-        // estava esperando já pode avançar (ou morrer por excesso de água).
-        // Não precisa mais de loop checando todo frame.
-        if (waitingForWater)
+        if (waitingForWater) // Checa se a planta estava esperando por água, e se sim, reavalia o estágio
             EvaluateStage();
     }
 }

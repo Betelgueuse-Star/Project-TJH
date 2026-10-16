@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 public class Terminal : MonoBehaviour, IInteractable
@@ -9,6 +8,9 @@ public class Terminal : MonoBehaviour, IInteractable
 
     [Header("Shop")]
     [SerializeField] private Transform itemSpawnPoint;
+
+    [Header("Water")]
+    [SerializeField] private WaterTank waterTank;
 
     public void EnterTerminalMode()
     {
@@ -44,6 +46,33 @@ public class Terminal : MonoBehaviour, IInteractable
             itemSpawnPoint.position,
             itemSpawnPoint.rotation
         );
+    }
+
+    // Compra o próximo nível de upgrade do abastecimento de água.
+    // Chamado pelo TerminalButton da tela de água (UnityEvent onClick).
+    public void BuyWaterUpgrade()
+    {
+        if (waterTank == null || currencyManager == null)
+        {
+            Debug.LogWarning("Missing water upgrade reference.", this);
+            return;
+        }
+
+        if (waterTank.IsMaxLevel)
+            return;
+
+        int nextLevel = waterTank.CurrentLevel + 1;
+
+        if (!waterTank.TryGetLevelData(nextLevel, out WaterTank.WaterUpgradeLevel nextLevelData))
+            return;
+
+        if (!currencyManager.TrySpendCurrency(nextLevelData.cost))
+        {
+            // FUTURO: feedback de "dinheiro insuficiente" (som, mensagem no monitor).
+            return;
+        }
+
+        waterTank.SetUpgradeLevel(nextLevel);
     }
 
     public void Interact(Player player)

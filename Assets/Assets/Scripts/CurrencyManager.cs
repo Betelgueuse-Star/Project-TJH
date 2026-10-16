@@ -1,12 +1,15 @@
-
+using System;
 using UnityEngine;
 
 public class CurrencyManager : MonoBehaviour
 {
-    [SerializeField] TerminalShopUI terminalShopUI;
     private int currentCurrency = 0;
 
     public int CurrentCurrency => currentCurrency;
+
+    // Disparado sempre que o dinheiro muda (ganho ou gasto), com o valor atual.
+    // Qualquer tela que mostre dinheiro (loja, água, etc.) só precisa escutar este evento.
+    public event Action<int> OnCurrencyChanged;
 
     public void AddCurrency(int amount)
     {
@@ -14,7 +17,7 @@ public class CurrencyManager : MonoBehaviour
             return;
 
         currentCurrency += amount;
-        terminalShopUI.UpdateCurrencyText(currentCurrency);
+        OnCurrencyChanged?.Invoke(currentCurrency);
     }
 
     public bool TrySpendCurrency(int amount)
@@ -23,7 +26,7 @@ public class CurrencyManager : MonoBehaviour
             return false;
 
         currentCurrency -= amount;
-        terminalShopUI.UpdateCurrencyText(currentCurrency);
+        OnCurrencyChanged?.Invoke(currentCurrency);
 
         return true;
     }

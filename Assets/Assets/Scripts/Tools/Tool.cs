@@ -1,26 +1,6 @@
 using UnityEngine;
 
-// MUDANÇA: esta classe substitui DOIS scripts antigos: o Tool (que guardava worldPrefab e
-// equippedPrefab) e o EquippedTool. Agora a ferramenta do mundo e a ferramenta da mão são
-// o MESMO GameObject. Ao pegar, ele vira filho da mão; ao largar, volta para o mundo.
-//
-// Por que é melhor:
-// - Não há Instantiate/Destroy ao pegar e largar.
-// - Não existem dois prefabs para manter sincronizados, nem referência de prefab
-//   para si mesmo (que causava o erro ao dropar).
-// - O estado da ferramenta é mantido (ex.: a água do regador não zera ao largar).
-//
-// Shovel e WateringCan herdam desta classe e só declaram o próprio Type.
-//
-// ESTRUTURA DO PREFAB (uma ferramenta = um prefab só):
-//   Ferramenta (raiz)  -> Shovel/WateringCan, Rigidbody, Collider, InteractableOutline
-//    |- WorldVisual    -> modelo que aparece no chão (arraste em "World Visual")
-//    |- HeldVisual     -> modelo que aparece na mão; no futuro leva o Animator e a UI
-//                         (arraste em "Held Visual")
-// O Collider fica na RAIZ (nunca no HeldVisual). Assim o raycast do Player sempre
-// encontra o componente Tool na raiz, e o Equip/Drop só alterna qual visual está ativo:
-//   no mundo -> WorldVisual ligado, HeldVisual desligado
-//   na mão   -> WorldVisual desligado, HeldVisual ligado
+// Ferramentas Herdam de Tool
 public abstract class Tool : MonoBehaviour
 {
     public abstract ToolType Type { get; }
@@ -31,14 +11,11 @@ public abstract class Tool : MonoBehaviour
     [SerializeField] private Vector3 heldLocalEulerAngles;
 
     [Header("Visuais (opcional)")]
-    // Se o modelo na mão for diferente do modelo no chão, coloque os dois como filhos
-    // e arraste aqui. Se for o mesmo modelo, deixe vazio.
-    [SerializeField] private GameObject worldVisual;
-    [SerializeField] private GameObject heldVisual;
+    [SerializeField] private GameObject worldVisual; // Modelo no mundo
+    [SerializeField] private GameObject heldVisual; // Modelo segurado pelo Player
 
-    // FUTURO (animações): descomente quando as animações existirem.
-    // O Animator deve ficar no filho HeldVisual (nunca na raiz), senão a animação briga
-    // com a pose definida no Equip. Cada ferramenta usa o próprio Animator Controller.
+    // FUTURO (animações)
+    // O Animator deve ficar no filho HeldVisual
     // [Header("Animação (futuro)")]
     // [SerializeField] private Animator animator;
     // private static readonly int UseHash = Animator.StringToHash("Use");
@@ -55,7 +32,7 @@ public abstract class Tool : MonoBehaviour
     private Collider[] colliders;
 
     // "protected virtual" para que Shovel/WateringCan possam ter o próprio Awake,
-    // chamando base.Awake().
+    // chamando base.Awake()
     protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -64,11 +41,9 @@ public abstract class Tool : MonoBehaviour
         SetHeldVisual(false); // começa no mundo
     }
 
-    // Chamado pelo Player ao pegar a ferramenta.
+    // Chamado pelo Player ao pegar a ferramenta
     public void Equip(Transform holdPoint)
     {
-        // Na mão: sem física e sem colisão (senão ela empurraria o jogador e o raycast
-        // de interação poderia acertar a própria ferramenta).
         if (rb != null)
             rb.isKinematic = true;
 

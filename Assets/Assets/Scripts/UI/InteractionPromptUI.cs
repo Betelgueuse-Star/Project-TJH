@@ -1,7 +1,9 @@
 using UnityEngine;
 
-public class InteractionPromptUI : MonoBehaviour
+public class CanvasUI : MonoBehaviour
 {
+    // Script para o Canvas geral
+
     [SerializeField] private Player player;
     [SerializeField] private GameObject interactableImage;
 

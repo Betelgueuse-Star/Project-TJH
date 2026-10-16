@@ -6,12 +6,26 @@ public class TerminalShopUI : MonoBehaviour
     [SerializeField] private CurrencyManager currencyManager;
     [SerializeField] private TextMeshProUGUI currencyText;
 
-    private void Start()
+    private void OnEnable()
     {
+        if (currencyManager == null)
+            return;
+
+        currencyManager.OnCurrencyChanged += UpdateCurrencyText;
+
+        // Cobre qualquer mudança que aconteceu enquanto a tela estava desativada.
         UpdateCurrencyText(currencyManager.CurrentCurrency);
     }
 
-    public void UpdateCurrencyText(int amount)
+    private void OnDisable()
+    {
+        if (currencyManager == null)
+            return;
+
+        currencyManager.OnCurrencyChanged -= UpdateCurrencyText;
+    }
+
+    private void UpdateCurrencyText(int amount)
     {
         currencyText.text = $"Currency: {amount}";
     }

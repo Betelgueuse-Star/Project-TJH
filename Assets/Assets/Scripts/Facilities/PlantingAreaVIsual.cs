@@ -14,15 +14,13 @@ public class PlantingAreaVisual : MonoBehaviour
     private GameObject currentPlantVisual;
     private GameObject currentSoilVisual;
 
-    // MUDANÇA: o mesmo "Instantiate(prefab, plantingPoint.position, plantingPoint.rotation)"
-    // aparecia três vezes. Agora existe um helper só. É genérico para servir
+    //É genérico para servir
     // tanto para GameObject quanto para ParticleSystem.
     private T SpawnAtPoint<T>(T prefab) where T : Object
     {
         return Instantiate(prefab, plantingPoint.position, plantingPoint.rotation);
     }
 
-    // MUDANÇA: o padrão "se não é nulo, destrói e zera" se repetia em vários métodos.
     private static void DestroyAndClear(ref GameObject visual)
     {
         if (visual == null)
@@ -56,28 +54,21 @@ public class PlantingAreaVisual : MonoBehaviour
         }
     }
 
-    public void UpdatePlantVisual(
-        PlantGrowthState currentState,
-        SeedDataSO plantedSeedData,
-        PlantingArea plantingArea)
+    public void UpdatePlantVisual(PlantGrowthState currentState, SeedDataSO plantedSeedData, PlantingArea plantingArea)
     {
         DestroyAndClear(ref currentPlantVisual);
 
-        // MUDANÇA: o switch que escolhia o prefab de cada estágio foi para o
-        // SeedDataSO (GetStagePrefab). Se um dia houver um estágio novo, o switch
-        // só precisa mudar lá.
+        // Pega o prefab do estágio atual da planta, se houver um seedData plantado.
         GameObject prefabToSpawn = plantedSeedData != null
             ? plantedSeedData.GetStagePrefab(currentState)
             : null;
 
-        // MUDANÇA: retorno antecipado, em vez de aninhar o resto dentro de um if.
         if (prefabToSpawn == null)
             return;
 
         currentPlantVisual = SpawnAtPoint(prefabToSpawn);
 
-        if (currentState == PlantGrowthState.Ready &&
-            currentPlantVisual.TryGetComponent(out Sapling sapling))
+        if (currentState == PlantGrowthState.Ready && currentPlantVisual.TryGetComponent(out Sapling sapling))
         {
             sapling.Setup(plantedSeedData, plantingArea);
         }
@@ -100,14 +91,12 @@ public class PlantingAreaVisual : MonoBehaviour
 
     public void PlayFertilizerEffect(FertilizerDataSO fertilizerData)
     {
-        if (fertilizerData == null ||
-            fertilizerData.fertilizerParticle == null)
+        if (fertilizerData == null || fertilizerData.fertilizerParticle == null)
             return;
 
         DestroyFertilizerEffect();
 
         currentFertilizerEffect = SpawnAtPoint(fertilizerData.fertilizerParticle);
-
         currentFertilizerEffect.Play();
     }
 

@@ -1,12 +1,8 @@
 using UnityEngine;
-// FUTURO (UI do regador): para usar o evento WaterChanged mais abaixo, descomente também:
-// using System;
-// MUDANÇA: removidos "using System.Collections;" e "using UnityEngine.Rendering;",
-// que não eram usados.
+using System;
 
-// MUDANÇA: herda de Tool (a classe base única das ferramentas, que cuida de pegar e
-// largar) e declara o tipo. Como a ferramenta do mundo e a da mão agora são o MESMO
-// objeto, a água do regador se mantém ao largar e pegar de novo.
+
+
 public class WateringCan : Tool
 {
     public override ToolType Type => ToolType.WateringCan;
@@ -21,7 +17,7 @@ public class WateringCan : Tool
     public float WaterAmount => waterAmount;
     public float CurrentWater => currentWater;
 
-    // FUTURO (UI do regador): descomente junto com o WateringCanUI.cs e com as linhas
+    // FUTURO (UI do regador)
     // "WaterChanged?.Invoke" dos métodos abaixo.
     // public float MaxWater => maxWater;
     // public event Action<float, float> WaterChanged; // (água atual, água máxima)
