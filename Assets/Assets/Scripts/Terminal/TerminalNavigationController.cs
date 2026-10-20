@@ -1,131 +1,110 @@
 using System;
-using Unity.Cinemachine;
 using UnityEngine;
 
+// Controla as abas do terminal (monitor único): só uma aba fica visível por vez
+// e a troca é instantânea, sem câmera e sem animação.
+// Este script não sabe o que existe dentro de cada aba, ele só mostra e esconde os painéis.
 public class TerminalNavigationController : MonoBehaviour
 {
-    [Serializable]
-    private class TerminalScreen
-    {
-        public CinemachineCamera camera;
-        public GameObject interfaceRoot;
-        public Camera terminalUICamera;
-    }
-
-
-[Header("Screens")]
-    [SerializeField] private CinemachineCamera playerCamera;
+    [Header("Abas (a ordem aqui é o índice usado pelos botões)")]
     [SerializeField] private TerminalScreen[] screens;
 
+    [Tooltip("Aba aberta na primeira vez que o terminal é usado")]
+    [SerializeField] private int defaultScreenIndex;
+
+    private TerminalScreen visibleScreen;
     private int currentScreenIndex;
-    private int playerCameraPriority;
-    private int[] originalPriorities;
+    private bool isOpen;
 
     public int CurrentScreenIndex => currentScreenIndex;
 
+    // Disparado ao trocar de aba (útil para destacar o botão da aba atual na barra de abas).
+    public event Action<int> OnScreenChanged;
+
     private void Awake()
     {
-        playerCameraPriority = playerCamera.Priority.Value;
-        originalPriorities = new int[screens.Length];
+        currentScreenIndex = Mathf.Clamp(defaultScreenIndex, 0, Mathf.Max(0, screens.Length - 1));
 
+        // Começa com todas as abas fechadas.
+        // Não chama Hide() porque essas abas nunca foram mostradas (não houve OnShow).
         for (int i = 0; i < screens.Length; i++)
         {
-            originalPriorities[i] = screens[i].camera.Priority.Value;
-
-            screens[i].interfaceRoot.SetActive(false);
-            screens[i].terminalUICamera.enabled = false;
-
-            ClearTargetTexture(screens[i].terminalUICamera);
+            if (screens[i] != null)
+                screens[i].gameObject.SetActive(false);
         }
     }
 
+    // Chamado pelo TerminalModeController ao entrar no terminal.
+    // Reabre na última aba usada.
     public void EnterNavigation()
     {
-        if (screens.Length == 0)
+        if (isOpen || screens.Length == 0)
             return;
 
-        currentScreenIndex = 0;
-        ActivateScreen(currentScreenIndex);
+        isOpen = true;
+
+        DisplayScreen(currentScreenIndex);
     }
 
+    // Chamado pelo TerminalModeController ao sair do terminal.
+    // O índice da aba atual é mantido para a próxima vez.
     public void ExitNavigation()
     {
-        ShowInterface(-1);
-
-        for (int i = 0; i < screens.Length; i++)
-        {
-            screens[i].camera.Priority = originalPriorities[i];
-        }
-    }
-
-    public void NextScreen()
-    {
-        currentScreenIndex++;
-
-        if (currentScreenIndex >= screens.Length)
-            currentScreenIndex = 0;
-
-        ActivateScreen(currentScreenIndex);
-    }
-
-    public void PreviousScreen()
-    {
-        currentScreenIndex--;
-
-        if (currentScreenIndex < 0)
-            currentScreenIndex = screens.Length - 1;
-
-        ActivateScreen(currentScreenIndex);
-    }
-
-    private void ActivateScreen(int index)
-    {
-        ShowInterface(index);
-
-        for (int i = 0; i < screens.Length; i++)
-        {
-            screens[i].camera.Priority =
-                i == index
-                    ? playerCameraPriority + 1
-                    : playerCameraPriority - 1;
-        }
-    }
-
-    private void ShowInterface(int index)
-    {
-        for (int i = 0; i < screens.Length; i++)
-        {
-            TerminalScreen screen = screens[i];
-            bool isActive = i == index;
-
-            screen.interfaceRoot.SetActive(isActive);
-
-            if (isActive)
-            {
-                screen.terminalUICamera.enabled = true;
-            }
-            else
-            {
-                ClearTargetTexture(screen.terminalUICamera);
-                screen.terminalUICamera.enabled = false;
-            }
-        }
-    }
-
-    private void ClearTargetTexture(Camera targetCamera)
-    {
-        RenderTexture target = targetCamera.targetTexture;
-
-        if (target == null)
+        if (!isOpen)
             return;
 
-        RenderTexture previous = RenderTexture.active;
-        RenderTexture.active = target;
+        isOpen = false;
 
-        GL.Clear(true, true, Color.black);
-
-        RenderTexture.active = previous;
+        if (visibleScreen != null)
+        {
+            visibleScreen.Hide();
+            visibleScreen = null;
+        }
     }
 
+    // Chamado pelos botões da barra de abas (Button > OnClick, com o índice da aba como argumento).
+    // Também serve para abrir uma aba específica por código (ex.: notificação do chat).
+    public void ShowScreen(int index)
+    {
+        if (!IsValidIndex(index))
+        {
+            Debug.LogWarning($"{name}: aba {index} inválida ou não configurada.", this);
+            return;
+        }
 
+        // Terminal fechado: só guarda qual aba deve abrir na próxima entrada.
+        if (!isOpen)
+        {
+            currentScreenIndex = index;
+            return;
+        }
+
+        DisplayScreen(index);
+    }
+
+    private void DisplayScreen(int index)
+    {
+        if (!IsValidIndex(index))
+            return;
+
+        TerminalScreen target = screens[index];
+        currentScreenIndex = index;
+
+        // Já é a aba visível: nada a fazer.
+        if (target == visibleScreen)
+            return;
+
+        if (visibleScreen != null)
+            visibleScreen.Hide();
+
+        visibleScreen = target;
+        visibleScreen.Show();
+
+        OnScreenChanged?.Invoke(index);
+    }
+
+    private bool IsValidIndex(int index)
+    {
+        return index >= 0 && index < screens.Length && screens[index] != null;
+    }
 }
