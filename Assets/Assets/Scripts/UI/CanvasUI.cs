@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class InteractionPromptUI : MonoBehaviour
+public class CanvasUI : MonoBehaviour
 {
     // Script para o Canvas geral
 
