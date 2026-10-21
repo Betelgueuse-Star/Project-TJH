@@ -13,8 +13,27 @@ public class TerminalWaterUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI qualityText;
     [SerializeField] private TextMeshProUGUI upgradeCostText;
 
+    private bool isConfigured;
+
+    //valida as referências UMA vez, aqui, em vez de checar em cada uso
+    private void Awake()
+    {
+        isConfigured =
+            waterTank != null &&
+            levelText != null &&
+            fillRateText != null &&
+            qualityText != null &&
+            upgradeCostText != null;
+
+        if (!isConfigured)
+            Debug.LogError($"{name}: referência faltando na tela de água, ela não vai funcionar.", this);
+    }
+
     private void OnEnable()
     {
+        if (!isConfigured)
+            return;
+
         waterTank.OnUpgradeLevelChanged += HandleUpgradeLevelChanged;
 
         // Cobre qualquer mudança que aconteceu enquanto a tela estava desativada.
@@ -23,6 +42,9 @@ public class TerminalWaterUI : MonoBehaviour
 
     private void OnDisable()
     {
+        if (!isConfigured)
+            return;
+
         waterTank.OnUpgradeLevelChanged -= HandleUpgradeLevelChanged;
     }
 
@@ -41,13 +63,14 @@ public class TerminalWaterUI : MonoBehaviour
             qualityText.text = $"Quality: {Mathf.RoundToInt(current.quality * 100f)}%";
         }
 
-        if (waterTank.IsMaxLevel)
-        {
-            upgradeCostText.text = "MAX";
-        }
-        else if (waterTank.TryGetLevelData(waterTank.CurrentLevel + 1, out WaterTank.WaterUpgradeLevel next))
+        // usa TryGetNextLevelData em vez de IsMaxLevel + CurrentLevel + 1.
+        if (waterTank.TryGetNextLevelData(out WaterTank.WaterUpgradeLevel next))
         {
             upgradeCostText.text = $"Upgrade: {next.cost}";
+        }
+        else
+        {
+            upgradeCostText.text = "MAX";
         }
     }
 }

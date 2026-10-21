@@ -25,7 +25,7 @@ public class WaterTank : MonoBehaviour, IInteractable, IConditionalInteractable
     [SerializeField] private WaterUpgradeLevel[] upgradeLevels;
     [SerializeField] private int currentLevel;
 
-    // Disparado sempre que a água muda: (água atual, água máxima).
+    // Disparado quando a água muda: (água atual, água máxima).
     // Quem mostra a informação (texto do tanque, tela do terminal) apenas escuta este evento.
     public event Action<float, float> OnWaterChanged;
 
@@ -40,12 +40,17 @@ public class WaterTank : MonoBehaviour, IInteractable, IConditionalInteractable
 
     // FUTURO (infecção): usado pelas plantas/incubadoras para calcular o risco de doença.
     public float WaterQuality => HasLevels ? upgradeLevels[currentLevel].quality : 1f;
-
     private bool HasLevels => upgradeLevels != null && upgradeLevels.Length > 0;
+
+    private int lastNotifiedWater;
 
     private void Awake()
     {
         currentWater = maxWater;
+
+        // começa sincronizado com o valor inicial, senão o primeiro frame
+        // de enchimento dispararia um evento desnecessário.
+        lastNotifiedWater = Mathf.FloorToInt(currentWater);
 
         if (!HasLevels)
             Debug.LogWarning($"{name}: nenhum nível de upgrade configurado, o tanque não vai reabastecer.", this);
@@ -68,7 +73,9 @@ public class WaterTank : MonoBehaviour, IInteractable, IConditionalInteractable
         float fillRate = upgradeLevels[currentLevel].fillRatePerSecond;
         currentWater = Mathf.Min(currentWater + fillRate * Time.deltaTime, maxWater);
 
-        OnWaterChanged?.Invoke(currentWater, maxWater);
+        // só avisa quando o inteiro mudou OU quando acabou de encher.
+        if (Mathf.FloorToInt(currentWater) != lastNotifiedWater || currentWater >= maxWater)
+            NotifyWaterChanged();
     }
 
     public float TakeWater(float amount)
@@ -79,9 +86,16 @@ public class WaterTank : MonoBehaviour, IInteractable, IConditionalInteractable
             return 0f;
 
         currentWater -= waterTaken;
-        OnWaterChanged?.Invoke(currentWater, maxWater);
+        NotifyWaterChanged();
 
         return waterTaken;
+    }
+
+    // único lugar que dispara OnWaterChanged.
+    private void NotifyWaterChanged()
+    {
+        lastNotifiedWater = Mathf.FloorToInt(currentWater);
+        OnWaterChanged?.Invoke(currentWater, maxWater);
     }
 
     // Chamado pelo terminal/loja DEPOIS de validar a compra (dinheiro, requisitos etc.).
@@ -111,6 +125,18 @@ public class WaterTank : MonoBehaviour, IInteractable, IConditionalInteractable
 
         data = default;
         return false;
+    }
+
+    // devolve os dados do PRÓXIMO nível, ou false se já está no máximo.
+    public bool TryGetNextLevelData(out WaterUpgradeLevel data)
+    {
+        if (IsMaxLevel)
+        {
+            data = default;
+            return false;
+        }
+
+        return TryGetLevelData(currentLevel + 1, out data);
     }
 
     public InteractionType GetInteraction(Player player)
