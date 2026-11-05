@@ -157,7 +157,7 @@ public class Elevator : MonoBehaviour
         else
         {
             State = ElevatorState.Between;
-            Debug.LogWarning($"{name}: o elevador começou fora do topo e do fundo. Mande-o para um dos pontos.", this);
+            //Debug.LogWarning($"{name}: o elevador começou fora do topo e do fundo. Mande-o para um dos pontos.", this);
         }
     }
 
