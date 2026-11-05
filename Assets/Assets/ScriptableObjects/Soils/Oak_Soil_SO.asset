@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0378d22ed2d23634dbc26c8bc910b939, type: 3}
-  m_Name: BSoil
+  m_Name: Oak_Soil_SO
   m_EditorClassIdentifier: Assembly-CSharp::SoilDataSO
-  soilName: BSoil
+  soilName: OakSoil
   growthMultiplier: 2
   maxUses: 3
-  soilPrefab: {fileID: 2221587382262589267, guid: d155ec240ed8e434283fd422a8047a5c, type: 3}
+  soilPrefab: {fileID: 4891701877558876670, guid: 3c78deaa423c5f341b63708b3baf7c30, type: 3}

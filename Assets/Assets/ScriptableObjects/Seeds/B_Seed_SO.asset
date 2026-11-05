@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 34ec5352df57d2246a18bc812fc6594f, type: 3}
-  m_Name: BSeed
+  m_Name: B_Seed_SO
   m_EditorClassIdentifier: Assembly-CSharp::SeedDataSO
   seedName: BSeed
   baseGrowthTime: 300

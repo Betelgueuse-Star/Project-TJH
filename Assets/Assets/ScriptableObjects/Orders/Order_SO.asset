@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40bbda19cbb135641ada77b34e67df1f, type: 3}
-  m_Name: Order 2
+  m_Name: Order_SO
   m_EditorClassIdentifier: Assembly-CSharp::OrderDataSO
   requirements:
-  - item: {fileID: 11400000, guid: f111c341dab6058478a3cc7913f5a2b2, type: 2}
-    amount: 1
   - item: {fileID: 11400000, guid: 9a2df0e5035501345a9f526ffae7748a, type: 2}
     amount: 2
-  rewardAmount: 50
+  - item: {fileID: 11400000, guid: f111c341dab6058478a3cc7913f5a2b2, type: 2}
+    amount: 3
+  rewardAmount: 60
