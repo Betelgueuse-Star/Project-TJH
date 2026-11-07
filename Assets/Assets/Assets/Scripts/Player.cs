@@ -15,6 +15,14 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask interactionLayerMask;
     [SerializeField] private float interactionRange = 3f;
 
+    [Header("Arremesso")]
+    [SerializeField] private float maxChargeTime = 2f;
+    [SerializeField] private float minThrowForce = 3f;
+    [SerializeField] private float maxThrowForce = 15f;
+
+    private float throwChargeTime;
+    private bool isChargingThrow;
+
     private Tool currentTool;
 
     private ObjectGrabbable objectGrabbable; // Objeto físico que está sendo carregado.
@@ -44,6 +52,12 @@ public class Player : MonoBehaviour
             interactionLayerMask);
 
         UpdateTarget();
+
+        if (isChargingThrow)
+        {
+            throwChargeTime += Time.deltaTime;
+            throwChargeTime = Mathf.Min(throwChargeTime, maxChargeTime);
+        }
     }
 
     private void UpdateTarget()
@@ -93,6 +107,47 @@ public class Player : MonoBehaviour
         OnCanInteractChanged?.Invoke(canInteract);
     }
 
+    private float CalculateThrowForce()
+    {
+        float chargePercent = Mathf.Clamp01(throwChargeTime / maxChargeTime);
+
+        return Mathf.Lerp(minThrowForce, maxThrowForce, chargePercent);
+    }
+
+    private void ThrowObject()
+    {
+        if (objectGrabbable == null || !objectGrabbable.CanBeThrown)
+            return;
+
+        float force = CalculateThrowForce();
+
+        Vector3 direction = cameraTransform.forward;
+
+        objectGrabbable.Throw(direction, force);
+
+        objectGrabbable = null;
+        throwChargeTime = 0f;
+        isChargingThrow = false;
+    }
+
+    public void OnThrow(InputValue value)
+    {
+        Debug.Log($"Throw: {value.isPressed}");
+
+        if (objectGrabbable == null || !objectGrabbable.CanBeThrown)
+            return;
+
+        if (value.isPressed)
+        {
+            isChargingThrow = true;
+            throwChargeTime = 0f;
+        }
+        else if (isChargingThrow)
+        {
+            ThrowObject();
+        }
+    }
+
     private void HideCurrentOutline()
     {
         if (currentOutline == null)
@@ -109,7 +164,7 @@ public class Player : MonoBehaviour
         // Caso 1: objeto físico
         if (objectGrabbable != null)
         {
-            objectGrabbable.Drop();
+            objectGrabbable.OnDrop();
             objectGrabbable = null;
             return;
         }
@@ -144,7 +199,7 @@ public class Player : MonoBehaviour
         HideCurrentOutline();
 
         objectGrabbable = newObjectGrabbable;
-        objectGrabbable.Grab(objectGrabPointTransform);
+        objectGrabbable.OnGrab(objectGrabPointTransform);
     }
 
     public void OnInteract(InputValue value)

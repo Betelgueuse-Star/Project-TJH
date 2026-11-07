@@ -384,11 +384,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfac0f993c086c54fb8403de6c39bddc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPickUpDrop
-  playerCameraGameObject: {fileID: 0}
+  cameraTransform: {fileID: 0}
   objectGrabPointTransform: {fileID: 0}
   toolHoldPointTransform: {fileID: 0}
   interactionLayerMask:
     serializedVersion: 2
     m_Bits: 123
   interactionRange: 3
-  computerModeController: {fileID: 0}

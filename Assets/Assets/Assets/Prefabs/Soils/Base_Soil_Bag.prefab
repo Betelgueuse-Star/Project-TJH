@@ -11,14 +11,14 @@ GameObject:
   - component: {fileID: 824076837697810924}
   - component: {fileID: 7011881958110335058}
   - component: {fileID: 9085545261314268408}
-  - component: {fileID: 5256354774488875724}
-  - component: {fileID: 9105949862954822441}
-  - component: {fileID: 8776224963831918746}
-  - component: {fileID: 6025935435366749837}
-  - component: {fileID: 4974566335353397761}
-  - component: {fileID: 438894081553840575}
-  m_Layer: 0
-  m_Name: OakSaplingPrafab
+  - component: {fileID: 2053757061341105634}
+  - component: {fileID: 5929700184171359820}
+  - component: {fileID: 6204537304855796903}
+  - component: {fileID: 2928312962458977403}
+  - component: {fileID: -4020095795740376555}
+  - component: {fileID: 5409535400754716697}
+  m_Layer: 7
+  m_Name: Base_Soil_Bag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33,8 +33,8 @@ Transform:
   m_GameObject: {fileID: 6208110011841838250}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.7, z: 0}
-  m_LocalScale: {x: 0.3, y: 1.4, z: 0.3}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -72,7 +72,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 109cfab647f8b5d4587e38aece51851e, type: 2}
+  - {fileID: 2100000, guid: a1debdb49d4207a46ad35fb2b1c56a84, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -96,7 +96,7 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5256354774488875724
+--- !u!65 &2053757061341105634
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -117,7 +117,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &9105949862954822441
+--- !u!54 &5929700184171359820
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -144,7 +144,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &8776224963831918746
+--- !u!114 &6204537304855796903
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aac842d1d9db06045939631f9bb32971, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectGrabbable
---- !u!114 &6025935435366749837
+--- !u!114 &2928312962458977403
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -165,11 +165,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 6208110011841838250}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b9918f70947a13428a5e61e1bad1e26, type: 3}
+  m_Script: {fileID: 11500000, guid: ac9665c6f71b62e4ebd43f2b51992c75, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Sapling
-  itemType: {fileID: 11400000, guid: 9a2df0e5035501345a9f526ffae7748a, type: 2}
---- !u!114 &4974566335353397761
+  m_EditorClassIdentifier: Assembly-CSharp::SoloBag
+  soilData: {fileID: 11400000, guid: 6953746baa99c834cb6f57a8c19cd0f3, type: 2}
+  itemType: {fileID: 11400000, guid: b127ea847b31fad4f9da06c913f27271, type: 2}
+--- !u!114 &-4020095795740376555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6208110011841838250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37a0e5c2850547c418af8e10d597d31b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractableOutline
+--- !u!114 &5409535400754716697
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -198,15 +211,3 @@ MonoBehaviour:
   _precomputeOutline: 0
   _bakeKeys: []
   _bakeValues: []
---- !u!114 &438894081553840575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6208110011841838250}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37a0e5c2850547c418af8e10d597d31b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InteractableOutline

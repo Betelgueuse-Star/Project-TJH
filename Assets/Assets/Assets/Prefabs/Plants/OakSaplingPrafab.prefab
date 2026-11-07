@@ -14,11 +14,11 @@ GameObject:
   - component: {fileID: 5256354774488875724}
   - component: {fileID: 9105949862954822441}
   - component: {fileID: 8776224963831918746}
-  - component: {fileID: 64543601276142209}
-  - component: {fileID: 8305283898498671575}
-  - component: {fileID: -4334834395662541749}
-  m_Layer: 0
-  m_Name: BSaplingPrefab
+  - component: {fileID: 6025935435366749837}
+  - component: {fileID: 4974566335353397761}
+  - component: {fileID: 438894081553840575}
+  m_Layer: 7
+  m_Name: OakSaplingPrafab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72,7 +72,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3562e43168147394090a35db77f7ac20, type: 2}
+  - {fileID: 2100000, guid: 109cfab647f8b5d4587e38aece51851e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aac842d1d9db06045939631f9bb32971, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectGrabbable
---- !u!114 &64543601276142209
+--- !u!114 &6025935435366749837
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -168,8 +168,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b9918f70947a13428a5e61e1bad1e26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Sapling
-  itemType: {fileID: 11400000, guid: f111c341dab6058478a3cc7913f5a2b2, type: 2}
---- !u!114 &8305283898498671575
+  itemType: {fileID: 11400000, guid: 9a2df0e5035501345a9f526ffae7748a, type: 2}
+--- !u!114 &4974566335353397761
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -198,7 +198,7 @@ MonoBehaviour:
   _precomputeOutline: 0
   _bakeKeys: []
   _bakeValues: []
---- !u!114 &-4334834395662541749
+--- !u!114 &438894081553840575
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
